@@ -2,6 +2,7 @@
 #define PHOTOEDITOR_H
 
 #include <QMainWindow>
+#include <library/bmp.c>
 
 namespace Ui {
 class PhotoEditor;
@@ -15,8 +16,17 @@ public:
     explicit PhotoEditor(QWidget *parent = nullptr);
     ~PhotoEditor();
 
+/*
+ *  Load and save Image
+ *  -------------------
+ */
+    void loadImage(const QString &dirFile);
+    void saveImage(const QString &dirFile);
+
 private:
     Ui::PhotoEditor *ui;
+
+    BMP img;    //Estructura de tipo imágen
 };
 
 #endif // PHOTOEDITOR_H
