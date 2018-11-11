@@ -2,7 +2,7 @@
 #define PHOTOEDITOR_H
 
 #include <QMainWindow>
-#include <library/bmp.c>
+#include <library/bmp.h>
 
 namespace Ui {
 class PhotoEditor;

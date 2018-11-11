@@ -27,13 +27,14 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         photoeditor.cpp \
-    library/bmp.c
+    library/bmp.cpp
         #main.cpp \
         #photoeditor.cpp \
 
 HEADERS += \
         photoeditor.h \
-    photoeditor.h
+    photoeditor.h \
+    library/bmp.h
 
 FORMS += \
         photoeditor.ui
