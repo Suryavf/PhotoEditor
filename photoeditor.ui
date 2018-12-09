@@ -6,20 +6,31 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>515</width>
-    <height>412</height>
+    <width>260</width>
+    <height>242</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>PhotoEditor</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QGraphicsView" name="Image">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>256</width>
+      <height>192</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>515</width>
+     <width>260</width>
      <height>22</height>
     </rect>
    </property>
@@ -27,8 +38,8 @@
     <property name="title">
      <string>Archivo</string>
     </property>
-    <addaction name="actionCargar_Imagen"/>
-    <addaction name="actionGuardar_Imagen"/>
+    <addaction name="actionAbrir"/>
+    <addaction name="actionGuardar"/>
    </widget>
    <addaction name="menuPhoto_Ed"/>
   </widget>
@@ -41,14 +52,14 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionCargar_Imagen">
+  <action name="actionAbrir">
    <property name="text">
-    <string>Cargar Imagen</string>
+    <string>Abrir</string>
    </property>
   </action>
-  <action name="actionGuardar_Imagen">
+  <action name="actionGuardar">
    <property name="text">
-    <string>Guardar Imagen</string>
+    <string>Guardar</string>
    </property>
   </action>
  </widget>
