@@ -6,6 +6,8 @@
 #include <library/bmp.h>
 
 #include "ColorSpace/ColorSpace.h"
+#include "Filter/Filter.h"
+#include "Filter/kernel.h"
 
 #include<opencv2/core/core.hpp>
 #include<opencv2/ml/ml.hpp>
@@ -16,6 +18,7 @@
 #include<opencv2/videoio.hpp>
 #include<opencv2/imgcodecs.hpp>
 
+#include <cufft.h>
 
 PhotoEditor::PhotoEditor(QWidget *parent) : QMainWindow(parent),
                                             ui(new Ui::PhotoEditor){
@@ -75,12 +78,14 @@ void PhotoEditor::on_pushButton_clicked(){
     unsigned char *C3 = new unsigned char[rows*cols];
 /*
  *  Modelos de color:
+ *  ----------------
  *    - 0: CMY       - 4: LMS
  *    - 1: HSL       - 5: YIQ
  *    - 2: HSV       - 6: YUV
  *    - 3: XYZ       - 7: YCbCr
  */
-    transformColorModel(R,G,B,C1,C2,C3,rows*cols,7);
+/*
+    transformColorModel(R,G,B,C1,C2,C3,rows*cols,2);
 
     cv::Mat out = cv::Mat(rows,cols,CV_8UC1,C1);
     cv::normalize(out, out, 0, 255, cv::NORM_MINMAX, CV_8UC1);
@@ -99,7 +104,52 @@ void PhotoEditor::on_pushButton_clicked(){
     cv::imshow( "Channel 3", out );
 
     cv::waitKey(0);
+*/
+/*
+ *  Filtrado/Convolucion
+ *  --------------------
+ */
+/*
+    Filter blur(LAPLACE_KERNEL);
 
+    for(int q=0 ; q<1;++q){
+        blur.convolution(R,R,rows,cols,4);
+        blur.convolution(G,G,rows,cols,4);
+        blur.convolution(B,B,rows,cols,4);
+    }
+
+    std::vector<cv::Mat> array_to_merge;
+    array_to_merge.push_back(cv::Mat(rows,cols,CV_8UC1,B));
+    array_to_merge.push_back(cv::Mat(rows,cols,CV_8UC1,G));
+    array_to_merge.push_back(cv::Mat(rows,cols,CV_8UC1,R));
+
+    cv::Mat out;
+    cv::merge(array_to_merge, out);
+
+    cv::namedWindow( "New Image" );
+    cv::imshow( "New Image", out );
+
+    cv::waitKey(0);
+*/
+    cufftDoubleComplex **complexImg=new cufftDoubleComplex*[rows];
+
+    id = 0;
+    for (int i=0;i<rows;i++){
+        complexImg[i] = new cufftDoubleComplex[rows];
+        for (int j=0;j<cols;j++){
+            complexImg[i][j].x=( (double)R[id]+(double)G[id]+(double)B[id]  )/3.0;
+            complexImg[i][j].y=0;
+            ++id;
+        }
+    }
+
+    cufftDoubleComplex *d_complexImg;
+    cudaMalloc((void**) &d_complexImg, rows*cols*sizeof(cufftDoubleComplex));
+
+
+
+    // Delete
     delete [] R ; delete [] G ; delete [] B ;
     delete [] C1; delete [] C2; delete [] C3;
+
 }

@@ -27,17 +27,21 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         photoeditor.cpp \
-        library/bmp.cpp
+        library/bmp.cpp \
+        Filter/Filter.cpp
 
 HEADERS += \
         photoeditor.h \
         photoeditor.h \
         library/bmp.h \
-        ColorSpace/ColorSpace.h
+        ColorSpace/ColorSpace.h \
+        Filter/Filter.h \
+        Filter/kernel.h \
+        Filter/Constants.h
 
 # Cuda files:
 OTHER_FILES += \
-    ColorSpace/ColorSpace.cu
+        ColorSpace/ColorSpace.cu
 
 CUDA_SOURCES += ColorSpace/ColorSpace.cu
 CUDA_SDK = "/usr/local/cuda/"   # Path to cuda SDK install
@@ -72,6 +76,10 @@ LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lope
 CONFIG += link_pkgconfig
 PKGCONFIG += opencv
 
+# OpenMP
+QMAKE_CXXFLAGS += -fopenmp
+LIBS += -fopenmp
+
 # Configuration of the Cuda compiler
 CONFIG(debug, debug|release) {
     # Debug mode
@@ -97,3 +105,5 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES +=

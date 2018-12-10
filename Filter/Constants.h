@@ -1,10 +1,3 @@
-/*
- * Constants.h
- *
- *  Created on: Sep 19, 2018
- *      Author: dpalominop
- */
-
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 

@@ -1,54 +1,36 @@
-//============================================================================
-// Name        : FIlter.h
-// Author      : Daniel Palomino
-// Version     : 1.0
-// Copyright   : GNU General Public License v3.0
-// Description : Parallel Matrix Convolution Class
-// Created on  : 06 set. 2018
-//============================================================================
-
 #ifndef FILTER_H
 #define FILTER_H
 
 #include <cstdlib>
 #include <iostream>
 #include <stdlib.h>
+#include <omp.h>
 #include <assert.h>
-#include "Constants.h"
-
-typedef unsigned char uchar;
-
-extern "C" void setConvolutionKernel(double* h_Kernel);
-extern "C" void setConvolutionKernel2(double h_Kernel[KERNEL_LENGTH*KERNEL_LENGTH]);
-extern "C" void convolutionGPU(uchar* image,uchar* result,int height,int width);
 
 #define ASSERT assert
-//#define length(x) (sizeof(x)/sizeof(x[0]))
+#define dim_kernel 5
+#define size_kernel dim_kernel*dim_kernel
+typedef unsigned char uchar;
 
 class Filter {
 
 private:
-	//double** dev_kernel;
+	double** mkernel;
+	int klength = dim_kernel;
 
 public:
 	Filter();
-	Filter(double kernel[5*5]);
-	Filter(double* kernel, int n);
+    Filter(const double kernel[][dim_kernel]);
+	Filter(double** kernel, int n);
 	~Filter();
 
-	bool setKernel(double kernel[5*5]);
-	bool setKernel(double* kernel, int n);
-    bool convolution(uchar* &image, uchar* &result, int x_length, int y_length);
+	bool setKernel(const double kernel[][dim_kernel]);
+	bool setKernel(double** kernel, int n);
+    bool convolution(uchar* image, uchar* result, int x_length, int y_length, int thread_count);
 
-//Static methods
-public:
 	static bool deleteMemory(double** &matrix, int x, int y);
 	static bool reserveMemory(double** &matrix, int x, int y);
-	static bool deleteMemory(double* &matrix, int x, int y);
-	static bool reserveMemory(double* &matrix, int x, int y);
+
 };
-
-
-
 
 #endif
