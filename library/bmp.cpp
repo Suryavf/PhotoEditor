@@ -1,9 +1,9 @@
 #include <library/bmp.h>
 
 //*************************************************************************************************************************************************
-//Función para abrir la imagen, colocarla en escala de grisis en la estructura imagen imagen (Arreglo de bytes de alto*ancho  --- 1 Byte por pixel 0-255)
-//Parametros de entrada: Referencia a un BMP (Estructura BMP), Referencia a la cadena ruta char ruta[]=char *ruta
-//Parametro que devuelve: Ninguno
+// Función para abrir la imagen, colocarla en escala de grisis en la estructura imagen imagen (Arreglo de bytes de alto*ancho  --- 1 Byte por pixel 0-255)
+// Parametros de entrada: Referencia a un BMP (Estructura BMP), Referencia a la cadena ruta char ruta[]=char *ruta
+// Parametro que devuelve: Ninguno
 //*************************************************************************************************************************************************
 void abrir_imagen(BMP *imagen, char *ruta){
     FILE *archivo;	//Puntero FILE para el archivo de imágen a abrir
@@ -45,11 +45,11 @@ void abrir_imagen(BMP *imagen, char *ruta){
         exit(1);
     }
 
+    /*
     //Reservar memoria para el arreglo que tendra la imágen en escala de BLUE (Arreglo de tamaño "img.ancho X img.alto")
     imagen->pixelB = new uchar*[imagen->alto];
     imagen->pixelG = new uchar*[imagen->alto];
     imagen->pixelR = new uchar*[imagen->alto];
-
     for(i=0;i<imagen->alto;++i) imagen->pixelB[i] = new uchar[imagen->ancho];
     for(i=0;i<imagen->alto;++i) imagen->pixelG[i] = new uchar[imagen->ancho];
     for(i=0;i<imagen->alto;++i) imagen->pixelR[i] = new uchar[imagen->ancho];
@@ -62,23 +62,50 @@ void abrir_imagen(BMP *imagen, char *ruta){
             fread(&G,sizeof(char),1, archivo);  //Byte Green del pixel
             fread(&R,sizeof(char),1, archivo);  //Byte Red del pixel
 
-            //imagen->pixel[i][j]=(unsigned char)((R*0.3)+(G*0.59)+ (B*0.11)); 	//Formula correcta
-            //imagen->pixel[i][j]=(B+G+R)/3;								//Forma simple (Promedio)
             imagen->pixelB[i][j]=B;
             imagen->pixelG[i][j]=G;
             imagen->pixelR[i][j]=R;
         }
     }
-    printf("imagen->alto: %d \n",imagen->alto);
-    printf("imagen->ancho: %d \n",imagen->ancho);
+    */
+
+    int size = imagen->alto*imagen->ancho;
+    imagen->pixel = new uchar[size*3];
+
+    uchar R,B,G;
+    int id = 0;
+    for (int p = 0; p<size; ++p){
+        fread(&B,sizeof(char),1, archivo);  //Byte Blue del pixel
+        fread(&G,sizeof(char),1, archivo);  //Byte Green del pixel
+        fread(&R,sizeof(char),1, archivo);  //Byte Red del pixel
+
+        imagen->pixel[id] = B; ++id;
+        imagen->pixel[id] = G; ++id;
+        imagen->pixel[id] = R; ++id;
+    }
+
+/*
+    for (i=0;i<imagen->alto;i++){
+        for (j=0;j<imagen->ancho;j++){
+            fread(&B,sizeof(char),1, archivo);  //Byte Blue del pixel
+            fread(&G,sizeof(char),1, archivo);  //Byte Green del pixel
+            fread(&R,sizeof(char),1, archivo);  //Byte Red del pixel
+
+            imagen->pixelB[i][j]=B;
+            imagen->pixelG[i][j]=G;
+            imagen->pixelR[i][j]=R;
+        }
+    }
+*/
+
     //Cerrrar el archivo
     fclose(archivo);
 }
 
 //****************************************************************************************************************************************************
-//Función para crear una imagen BMP, a partir de la estructura imagen imagen (Arreglo de bytes de alto*ancho  --- 1 Byte por pixel 0-255)
-//Parametros de entrada: Referencia a un BMP (Estructura BMP), Referencia a la cadena ruta char ruta[]=char *ruta
-//Parametro que devuelve: Ninguno
+// Función para crear una imagen BMP, a partir de la estructura imagen imagen (Arreglo de bytes de alto*ancho  --- 1 Byte por pixel 0-255)
+// Parametros de entrada: Referencia a un BMP (Estructura BMP), Referencia a la cadena ruta char ruta[]=char *ruta
+// Parametro que devuelve: Ninguno
 //****************************************************************************************************************************************************
 void crear_imagen(BMP *imagen, char ruta[],int escala){
     FILE *archivo;	//Puntero FILE para el archivo de imágen a abrir
@@ -116,16 +143,6 @@ void crear_imagen(BMP *imagen, char ruta[],int escala){
     imgNew.tamanoEstructura=imgNew.alto*imgNew.ancho*3;
     imgNew.tamano=54+imgNew.tamanoEstructura;
 
-
-    printf("tipo imagNew: %c%c\n",imgNew.bm[0],imgNew.bm[1]);
-    printf("tamano imagNew: %d\n",imgNew.tamano);
-    printf("tamano alto: %d\n",imgNew.alto);
-    printf("tamano ancho: %d\n",imgNew.ancho);
-    printf("tamano tamanoMetadatos: %d\n",imgNew.tamanoMetadatos);
-    printf("tamano tamanoEstructura: %d\n",imgNew.tamanoEstructura);
-    printf("escala: %d\n",escala);
-    printf("pxmh: %d\n",imgNew.pxmh);
-    printf("pxmv: %d\n",imgNew.pxmv);
 
     ////////////////////////////////////////////////////////////
     imgNew.pixelB = new uchar*[imgNew.alto];
