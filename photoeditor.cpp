@@ -3,7 +3,10 @@
 #include <QtCore>
 #include <QtGui>
 #include <QFileDialog>
+
 #include <library/bmp.h>
+
+#include "library/utils.h"
 
 #include "ColorSpace/ColorSpace.h"
 #include "Filter/Filter.h"
@@ -22,8 +25,6 @@
 #include<opencv2/videoio.hpp>
 #include<opencv2/imgcodecs.hpp>
 
-#include <cufft.h>
-
 PhotoEditor::PhotoEditor(QWidget *parent) : QMainWindow(parent),
                                             ui(new Ui::PhotoEditor){
     ui->setupUi(this);
@@ -34,6 +35,7 @@ PhotoEditor::PhotoEditor(QWidget *parent) : QMainWindow(parent),
 }
 
 PhotoEditor::~PhotoEditor(){
+    delete [] R ; delete [] G ; delete [] B ;
     delete ui;
 }
 
@@ -55,6 +57,26 @@ void PhotoEditor::on_actionGuardar_triggered(){
     crear_imagen(&img,ba.data(),1);
 }
 
+
+void PhotoEditor::on_open_clicked(){
+    cv::Mat src = cv::imread("/home/victor/Documentos/Imagenes/PhotoEditor/lena.jpg");
+    rows = src.rows;
+    cols = src.cols;
+
+    R = new uchar[rows*cols];
+    G = new uchar[rows*cols];
+    B = new uchar[rows*cols];
+
+    int id = 0;
+    for(int i=0; i<rows; i++) for(int j=0; j<cols; j++){
+        B[id] = src.at<cv::Vec3b>(i,j)[0];
+        G[id] = src.at<cv::Vec3b>(i,j)[1];
+        R[id] = src.at<cv::Vec3b>(i,j)[2];
+        ++id;
+    }
+}
+
+
 void PhotoEditor::on_pushButton_clicked(){
 
     // Read image
@@ -70,16 +92,16 @@ void PhotoEditor::on_pushButton_clicked(){
     */
     std::cout << "size: (" << rows << "," << cols  << ")"<< std::endl;
 
-    unsigned char *R = new unsigned char[rows*cols];
-    unsigned char *G = new unsigned char[rows*cols];
-    unsigned char *B = new unsigned char[rows*cols];
+    unsigned char *_R = new unsigned char[rows*cols];
+    unsigned char *_G = new unsigned char[rows*cols];
+    unsigned char *_B = new unsigned char[rows*cols];
 
     // Getting data
     int id = 0;
     for(int i=0; i<rows; i++) for(int j=0; j<cols; j++){
-        B[id] = img.at<cv::Vec3b>(i,j)[0];
-        G[id] = img.at<cv::Vec3b>(i,j)[1];
-        R[id] = img.at<cv::Vec3b>(i,j)[2];
+        _B[id] = img.at<cv::Vec3b>(i,j)[0];
+        _G[id] = img.at<cv::Vec3b>(i,j)[1];
+        _R[id] = img.at<cv::Vec3b>(i,j)[2];
         ++id;
     }
 
@@ -163,7 +185,95 @@ void PhotoEditor::on_pushButton_clicked(){
  */
 
     // Delete
-    delete [] R ; delete [] G ; delete [] B ;
+    delete [] _R ; delete [] _G ; delete [] _B ;
     delete [] C1; delete [] C2; delete [] C3;
 
+}
+
+void PhotoEditor::on_actionCMY_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
+    transformColorModel(R,G,B,C1,C2,C3,rows*cols,0);
+    showColorModel(C1,C2,C3,rows,cols,"CMY");
+
+    delete [] C1; delete [] C2; delete [] C3;
+}
+
+void PhotoEditor::on_actionHSL_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
+    transformColorModel(R,G,B,C1,C2,C3,rows*cols,1);
+    showColorModel(C1,C2,C3,rows,cols,"HSL");
+
+    delete [] C1; delete [] C2; delete [] C3;
+}
+
+void PhotoEditor::on_actionHSV_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
+    transformColorModel(R,G,B,C1,C2,C3,rows*cols,2);
+    showColorModel(C1,C2,C3,rows,cols,"HSV");
+
+    delete [] C1; delete [] C2; delete [] C3;
+}
+
+void PhotoEditor::on_actionXYZ_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
+    transformColorModel(R,G,B,C1,C2,C3,rows*cols,3);
+    showColorModel(C1,C2,C3,rows,cols,"XYZ");
+
+    delete [] C1; delete [] C2; delete [] C3;
+}
+
+void PhotoEditor::on_actionLMS_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
+    transformColorModel(R,G,B,C1,C2,C3,rows*cols,4);
+    showColorModel(C1,C2,C3,rows,cols,"LMS");
+
+    delete [] C1; delete [] C2; delete [] C3;
+}
+
+void PhotoEditor::on_actionYIQ_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
+    transformColorModel(R,G,B,C1,C2,C3,rows*cols,5);
+    showColorModel(C1,C2,C3,rows,cols,"YIQ");
+
+    delete [] C1; delete [] C2; delete [] C3;
+}
+
+void PhotoEditor::on_actionYUV_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
+    transformColorModel(R,G,B,C1,C2,C3,rows*cols,6);
+    showColorModel(C1,C2,C3,rows,cols,"YUV");
+
+    delete [] C1; delete [] C2; delete [] C3;
+}
+
+void PhotoEditor::on_actionYCbCr_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
+    transformColorModel(R,G,B,C1,C2,C3,rows*cols,7);
+    showColorModel(C1,C2,C3,rows,cols,"YCbCr");
+
+    delete [] C1; delete [] C2; delete [] C3;
 }
