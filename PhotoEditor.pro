@@ -30,7 +30,8 @@ SOURCES += \
         library/bmp.cpp \
         Filter/Filter.cpp \
         GeomTrans/geomTransform.cpp \
-    library/utils.cpp
+    library/utils.cpp \
+    Video/matching.cpp
 
 HEADERS += \
         photoeditor.h \
@@ -43,7 +44,8 @@ HEADERS += \
         FFT/fft.h \
         GeomTrans/geomTransform.h \
     library/includes.h \
-    library/utils.h
+    library/utils.h \
+    Video/matching.h
 
 # Cuda files:
 OTHER_FILES += \

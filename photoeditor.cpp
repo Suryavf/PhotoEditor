@@ -16,6 +16,8 @@
 
 #include "GeomTrans/geomTransform.h"
 
+#include "Video/matching.h"
+
 #include<opencv2/core/core.hpp>
 #include<opencv2/ml/ml.hpp>
 #include<opencv/cv.h>
@@ -84,12 +86,6 @@ void PhotoEditor::on_pushButton_clicked(){
     int rows = img.rows;
     int cols = img.cols;
 
-    /*
-    cv::namedWindow( "Image" );
-    cv::imshow( "Image", img );
-
-    cv::waitKey(0);
-    */
     std::cout << "size: (" << rows << "," << cols  << ")"<< std::endl;
 
     unsigned char *_R = new unsigned char[rows*cols];
@@ -183,6 +179,7 @@ void PhotoEditor::on_pushButton_clicked(){
 /*
     geometricTransformation(R , G , B, uint(rows), uint(cols));
  */
+    matching("/home/victor/Documentos/Imagenes/PhotoEditor/gatito.mp4");
 
     // Delete
     delete [] _R ; delete [] _G ; delete [] _B ;
