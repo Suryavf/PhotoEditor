@@ -54,7 +54,21 @@
     <addaction name="actionAbrir"/>
     <addaction name="actionGuardar"/>
    </widget>
+   <widget class="QMenu" name="menuModel">
+    <property name="title">
+     <string>Model</string>
+    </property>
+    <addaction name="actionCMY"/>
+    <addaction name="actionHSL"/>
+    <addaction name="actionHSV"/>
+    <addaction name="actionXYZ"/>
+    <addaction name="actionLMS"/>
+    <addaction name="actionYIQ"/>
+    <addaction name="actionYUV"/>
+    <addaction name="actionYCbCr"/>
+   </widget>
    <addaction name="menuPhoto_Ed"/>
+   <addaction name="menuModel"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -73,6 +87,46 @@
   <action name="actionGuardar">
    <property name="text">
     <string>Guardar</string>
+   </property>
+  </action>
+  <action name="actionCMY">
+   <property name="text">
+    <string>CMY</string>
+   </property>
+  </action>
+  <action name="actionHSL">
+   <property name="text">
+    <string>HSL</string>
+   </property>
+  </action>
+  <action name="actionHSV">
+   <property name="text">
+    <string>HSV</string>
+   </property>
+  </action>
+  <action name="actionXYZ">
+   <property name="text">
+    <string>XYZ</string>
+   </property>
+  </action>
+  <action name="actionLMS">
+   <property name="text">
+    <string>LMS</string>
+   </property>
+  </action>
+  <action name="actionYIQ">
+   <property name="text">
+    <string>YIQ</string>
+   </property>
+  </action>
+  <action name="actionYUV">
+   <property name="text">
+    <string>YUV</string>
+   </property>
+  </action>
+  <action name="actionYCbCr">
+   <property name="text">
+    <string>YCbCr</string>
    </property>
   </action>
  </widget>

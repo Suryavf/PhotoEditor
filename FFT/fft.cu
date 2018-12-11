@@ -1,4 +1,5 @@
 #include "fft.h"
+#include <omp.h>
 
 // CUDA runtime
 #include <cuda.h>
@@ -26,6 +27,7 @@ extern "C" void executeFFT(uchar *h_R , uchar *h_G , uchar *h_B ,
 	// RGB to complex
 	id = 0;
     Complex **cImg=new Complex*[rows];
+#   pragma omp parallel for num_threads(4)
 	for (i=0;i<rows;i++){
         cImg[i] = new Complex[rows];
         for (j=0;j<cols;j++){ 
@@ -66,6 +68,7 @@ extern "C" void executeFFT(uchar *h_R , uchar *h_G , uchar *h_B ,
     double suma = 0;
 
     id = 0;
+#   pragma omp parallel for num_threads(4)
     for (id=0;id<length;++id){
     	x = fft[id].x;
     	y = fft[id].y;
@@ -82,6 +85,7 @@ extern "C" void executeFFT(uchar *h_R , uchar *h_G , uchar *h_B ,
 
     // Magnitude
     double aux = 255.0/(maxMag-minMag);
+#   pragma omp parallel for num_threads(4)
     for (id=0;id<length;++id){
         h_Mag[id] = ((uchar)(  (mag[id]-minMag)*aux  ));
     }
@@ -89,6 +93,7 @@ extern "C" void executeFFT(uchar *h_R , uchar *h_G , uchar *h_B ,
     // Shift
     uint cx = rows/2;
     uint cy = cols/2;
+#   pragma omp parallel for num_threads(4)
     for (i=0;i<cx;i++){
         for (j=0;j<cy;j++){
             swap( h_Mag[ idx(i   ,j   ,cols) ],

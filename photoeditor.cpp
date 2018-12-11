@@ -11,6 +11,8 @@
 
 #include "FFT/fft.h"
 
+#include "GeomTrans/geomTransform.h"
+
 #include<opencv2/core/core.hpp>
 #include<opencv2/ml/ml.hpp>
 #include<opencv/cv.h>
@@ -141,13 +143,24 @@ void PhotoEditor::on_pushButton_clicked(){
 
     cv::waitKey(0);
 */
-
+/*
+ *  Execute FFT
+ *  -----------
+ */
+/*
     executeFFT(R,G,B,C1, uint(rows), uint(cols));
 
     cv::Mat out = cv::Mat(rows,cols,CV_8UC1,C1);
     cv::namedWindow( "FFT" );
     cv::imshow( "FFT", out );
-
+*/
+/*
+ *  Geometric transformation
+ *  ------------------------
+ */
+/*
+    geometricTransformation(R , G , B, uint(rows), uint(cols));
+ */
 
     // Delete
     delete [] R ; delete [] G ; delete [] B ;

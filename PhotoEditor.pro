@@ -28,7 +28,8 @@ SOURCES += \
         main.cpp \
         photoeditor.cpp \
         library/bmp.cpp \
-        Filter/Filter.cpp
+        Filter/Filter.cpp \
+        GeomTrans/geomTransform.cpp
 
 HEADERS += \
         photoeditor.h \
@@ -38,7 +39,8 @@ HEADERS += \
         Filter/Filter.h \
         Filter/kernel.h \
         Filter/Constants.h \
-        FFT/fft.h
+        FFT/fft.h \
+        GeomTrans/geomTransform.h
 
 # Cuda files:
 OTHER_FILES += \
