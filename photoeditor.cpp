@@ -9,6 +9,8 @@
 #include "Filter/Filter.h"
 #include "Filter/kernel.h"
 
+#include "FFT/fft.h"
+
 #include<opencv2/core/core.hpp>
 #include<opencv2/ml/ml.hpp>
 #include<opencv/cv.h>
@@ -58,6 +60,12 @@ void PhotoEditor::on_pushButton_clicked(){
     int rows = img.rows;
     int cols = img.cols;
 
+    /*
+    cv::namedWindow( "Image" );
+    cv::imshow( "Image", img );
+
+    cv::waitKey(0);
+    */
     std::cout << "size: (" << rows << "," << cols  << ")"<< std::endl;
 
     unsigned char *R = new unsigned char[rows*cols];
@@ -76,6 +84,8 @@ void PhotoEditor::on_pushButton_clicked(){
     unsigned char *C1 = new unsigned char[rows*cols];
     unsigned char *C2 = new unsigned char[rows*cols];
     unsigned char *C3 = new unsigned char[rows*cols];
+
+
 /*
  *  Modelos de color:
  *  ----------------
@@ -112,7 +122,7 @@ void PhotoEditor::on_pushButton_clicked(){
 /*
     Filter blur(LAPLACE_KERNEL);
 
-    for(int q=0 ; q<1;++q){
+    for(int q=0 ; q<5;++q){
         blur.convolution(R,R,rows,cols,4);
         blur.convolution(G,G,rows,cols,4);
         blur.convolution(B,B,rows,cols,4);
@@ -131,21 +141,12 @@ void PhotoEditor::on_pushButton_clicked(){
 
     cv::waitKey(0);
 */
-    cufftDoubleComplex **complexImg=new cufftDoubleComplex*[rows];
 
-    id = 0;
-    for (int i=0;i<rows;i++){
-        complexImg[i] = new cufftDoubleComplex[rows];
-        for (int j=0;j<cols;j++){
-            complexImg[i][j].x=( (double)R[id]+(double)G[id]+(double)B[id]  )/3.0;
-            complexImg[i][j].y=0;
-            ++id;
-        }
-    }
+    executeFFT(R,G,B,C1, uint(rows), uint(cols));
 
-    cufftDoubleComplex *d_complexImg;
-    cudaMalloc((void**) &d_complexImg, rows*cols*sizeof(cufftDoubleComplex));
-
+    cv::Mat out = cv::Mat(rows,cols,CV_8UC1,C1);
+    cv::namedWindow( "FFT" );
+    cv::imshow( "FFT", out );
 
 
     // Delete
