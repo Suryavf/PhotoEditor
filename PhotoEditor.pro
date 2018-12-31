@@ -43,9 +43,9 @@ HEADERS += \
         Filter/Constants.h \
         FFT/fft.h \
         GeomTrans/geomTransform.h \
-    library/includes.h \
     library/utils.h \
-    Video/matching.h
+    Video/matching.h \
+    includes.h
 
 # Cuda files:
 OTHER_FILES += \

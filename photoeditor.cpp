@@ -4,8 +4,9 @@
 #include <QtGui>
 #include <QFileDialog>
 
-#include <library/bmp.h>
+#include "includes.h"
 
+#include <library/bmp.h>
 #include "library/utils.h"
 
 #include "ColorSpace/ColorSpace.h"
@@ -13,27 +14,12 @@
 #include "Filter/kernel.h"
 
 #include "FFT/fft.h"
-
 #include "GeomTrans/geomTransform.h"
-
 #include "Video/matching.h"
-
-#include<opencv2/core/core.hpp>
-#include<opencv2/ml/ml.hpp>
-#include<opencv/cv.h>
-#include<opencv2/imgproc/imgproc.hpp>
-#include<opencv2/highgui/highgui.hpp>
-#include<opencv2/video/background_segm.hpp>
-#include<opencv2/videoio.hpp>
-#include<opencv2/imgcodecs.hpp>
 
 PhotoEditor::PhotoEditor(QWidget *parent) : QMainWindow(parent),
                                             ui(new Ui::PhotoEditor){
     ui->setupUi(this);
-    //scene        = new QGraphicsScene(this);
-    //graphicsView = new QGraphicsView (this);
-
-    //scene->setSceneRect( QRectF(2,2,800,800) );
 }
 
 PhotoEditor::~PhotoEditor(){
@@ -44,19 +30,17 @@ PhotoEditor::~PhotoEditor(){
 void PhotoEditor::on_actionAbrir_triggered(){
     QString fileName = QFileDialog::getOpenFileName(this,
                                  tr("Abrir Imagen BMP"), "",
-                                 tr("Imagen BMP (*.bmp);;All Files (*)"));
-    QByteArray ba = fileName.toLocal8Bit();
-    abrir_imagen(&img,ba.data());
-
-    QImage image(img.pixel, img.ancho, img.alto, QImage::Format_RGB888);
+                                 tr("Imagen BMP (*.bmp);;Imagen (*.bmp *.png *.jpg  *.jpeg *.gif *.tif)"));
+    pathTo = fileName.toStdString();
+    abrir_imagen(R,G,B,rows,cols,pathTo);
 }
 
 void PhotoEditor::on_actionGuardar_triggered(){
     QString fileName = QFileDialog::getSaveFileName(this,
                                  tr("Guardar Imagen BMP"), "",
                                  tr("Imagen BMP (*.bmp);;All Files (*)"));
-    QByteArray ba = fileName.toLocal8Bit();
-    crear_imagen(&img,ba.data(),1);
+    pathTo = fileName.toStdString();
+    crear_imagen(&img,pathTo.c_str(),1);
 }
 
 

@@ -73,7 +73,7 @@ bool Filter::convolution(uchar* image, uchar* result, int x_length, int y_length
 #pragma omp parallel for collapse(2) num_threads(thread_count) shared(mImage, image)
 	for (int i = li_mImage; i < x_ls_mImage; i++) {
 		for (int j = li_mImage; j < y_ls_mImage; j++) {
-            mImage[i][j] = (double)image[ (i - 2)*y_length + j - 2];
+            mImage[i][j] = double(image[ (i - 2)*y_length + j - 2]);
 		}
 	}
 
@@ -125,7 +125,7 @@ bool Filter::convolution(uchar* image, uchar* result, int x_length, int y_length
 			acumulador += krow[3] * irow[j + -1];
 			acumulador += krow[4] * irow[j + -2];
 
-            result[(i-li_mImage)*y_length  + (j-li_mImage)] = (uchar) acumulador;
+            result[(i-li_mImage)*y_length  + (j-li_mImage)] = uchar(acumulador);
 		}
 	}
 

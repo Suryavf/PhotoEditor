@@ -1,16 +1,11 @@
 #ifndef FILTER_H
 #define FILTER_H
 
-#include <cstdlib>
-#include <iostream>
-#include <stdlib.h>
-#include <omp.h>
-#include <assert.h>
+#include "../includes.h"
 
 #define ASSERT assert
 #define dim_kernel 5
 #define size_kernel dim_kernel*dim_kernel
-typedef unsigned char uchar;
 
 class Filter {
 

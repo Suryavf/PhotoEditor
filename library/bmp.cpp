@@ -5,9 +5,8 @@
 // Parametros de entrada: Referencia a un BMP (Estructura BMP), Referencia a la cadena ruta char ruta[]=char *ruta
 // Parametro que devuelve: Ninguno
 //*************************************************************************************************************************************************
-void abrir_imagen(BMP *imagen, char *ruta){
+void abrir_imagen(BMP *imagen, const char *ruta){
     FILE *archivo;	//Puntero FILE para el archivo de imágen a abrir
-    int i,j;
 
     //Abrir el archivo de imágen
     archivo = fopen( ruta, "rb+" );
@@ -44,31 +43,6 @@ void abrir_imagen(BMP *imagen, char *ruta){
         printf ("La imagen debe ser de 24 bits.\n");
         exit(1);
     }
-
-    /*
-    //Reservar memoria para el arreglo que tendra la imágen en escala de BLUE (Arreglo de tamaño "img.ancho X img.alto")
-    imagen->pixelB = new uchar*[imagen->alto];
-    imagen->pixelG = new uchar*[imagen->alto];
-    imagen->pixelR = new uchar*[imagen->alto];
-    for(i=0;i<imagen->alto;++i) imagen->pixelB[i] = new uchar[imagen->ancho];
-    for(i=0;i<imagen->alto;++i) imagen->pixelG[i] = new uchar[imagen->ancho];
-    for(i=0;i<imagen->alto;++i) imagen->pixelR[i] = new uchar[imagen->ancho];
-
-    //Pasar la imágen al arreglo reservado en escala de BLUE,GREEN y RED
-    unsigned char R,B,G;
-    for (i=0;i<imagen->alto;i++){
-        for (j=0;j<imagen->ancho;j++){
-            fread(&B,sizeof(char),1, archivo);  //Byte Blue del pixel
-            fread(&G,sizeof(char),1, archivo);  //Byte Green del pixel
-            fread(&R,sizeof(char),1, archivo);  //Byte Red del pixel
-
-            imagen->pixelB[i][j]=B;
-            imagen->pixelG[i][j]=G;
-            imagen->pixelR[i][j]=R;
-        }
-    }
-    */
-
     int size = imagen->alto*imagen->ancho;
     imagen->pixel = new uchar[size*3];
 
@@ -84,20 +58,6 @@ void abrir_imagen(BMP *imagen, char *ruta){
         imagen->pixel[id] = R; ++id;
     }
 
-/*
-    for (i=0;i<imagen->alto;i++){
-        for (j=0;j<imagen->ancho;j++){
-            fread(&B,sizeof(char),1, archivo);  //Byte Blue del pixel
-            fread(&G,sizeof(char),1, archivo);  //Byte Green del pixel
-            fread(&R,sizeof(char),1, archivo);  //Byte Red del pixel
-
-            imagen->pixelB[i][j]=B;
-            imagen->pixelG[i][j]=G;
-            imagen->pixelR[i][j]=R;
-        }
-    }
-*/
-
     //Cerrrar el archivo
     fclose(archivo);
 }
@@ -107,7 +67,7 @@ void abrir_imagen(BMP *imagen, char *ruta){
 // Parametros de entrada: Referencia a un BMP (Estructura BMP), Referencia a la cadena ruta char ruta[]=char *ruta
 // Parametro que devuelve: Ninguno
 //****************************************************************************************************************************************************
-void crear_imagen(BMP *imagen, char ruta[],int escala){
+void crear_imagen(BMP *imagen, const char ruta[],int escala){
     FILE *archivo;	//Puntero FILE para el archivo de imágen a abrir
 
     int i,j;
@@ -123,21 +83,20 @@ void crear_imagen(BMP *imagen, char ruta[],int escala){
     BMP imgNew;
     imgNew.bm[0]=imagen->bm[0];
     imgNew.bm[1]=imagen->bm[1];
-    //imgNew.tamano=imagen->tamano;
+
     imgNew.reservado=imagen->reservado;
     imgNew.offset=imagen->offset;
     imgNew.tamanoMetadatos=imagen->tamanoMetadatos;
-    //imgNew.alto=imagen->alto;
-    //imgNew.ancho=imagen->ancho;
+
     imgNew.numeroPlanos=imagen->numeroPlanos;
     imgNew.profundidadColor=imagen->profundidadColor;
     imgNew.tipoCompresion=imagen->tipoCompresion;
-    //imgNew.tamanoEstructura=imagen->tamanoEstructura;
+
     imgNew.pxmh=imagen->pxmh;
     imgNew.pxmv=imagen->pxmv;
     imgNew.coloresUsados=imagen->coloresUsados;
     imgNew.coloresImportantes=imagen->coloresImportantes;
-    //
+
     imgNew.alto=(imagen->alto)*escala;
     imgNew.ancho=(imagen->ancho)*escala;
     imgNew.tamanoEstructura=imgNew.alto*imgNew.ancho*3;

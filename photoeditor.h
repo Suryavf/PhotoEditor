@@ -6,7 +6,7 @@
 #include <QGraphicsView>
 #include <library/bmp.h>
 
-#include "library/includes.h"
+#include "includes.h"
 
 namespace Ui {
 class PhotoEditor;
@@ -28,27 +28,28 @@ public:
     void saveImage(const QString &dirFile);
 
 private slots:
+
+    void on_pushButton_clicked();
+    void on_open_clicked();
+
+/*
+ *  Read/Write BMP
+ *  --------------
+ */
     void on_actionAbrir_triggered();
     void on_actionGuardar_triggered();
 
-    void on_pushButton_clicked();
-
+/*
+ *  Color Space Transform
+ *  ---------------------
+ */
     void on_actionCMY_triggered();
-
-    void on_open_clicked();
-
     void on_actionHSL_triggered();
-
     void on_actionHSV_triggered();
-
     void on_actionXYZ_triggered();
-
     void on_actionLMS_triggered();
-
     void on_actionYIQ_triggered();
-
     void on_actionYUV_triggered();
-
     void on_actionYCbCr_triggered();
 
 private:
@@ -56,11 +57,13 @@ private:
     QGraphicsScene       *scene;
     QGraphicsView *graphicsView;
 
-    BMP img;    //Estructura de tipo imágen
+    BMP   img;
     uchar *R, *G, *B;
 
     int rows;
     int cols;
+
+    std::string pathTo;
 };
 
 #endif // PHOTOEDITOR_H

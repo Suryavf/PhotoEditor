@@ -5,13 +5,13 @@ std::vector<cv::Point2f> pts;
 void sortPoints(std::vector<cv::Point2f> &outgrid ){
     float maxSum = -1.0, minSum = 999999999.99f;
     float sum;
-    int idMaxSum = 0, idMinSum = 0;
+    size_t idMaxSum = 0, idMinSum = 0;
 
-    for(int i=0; i<int(pts.size()); ++i){
+    for(size_t i=0; i<pts.size(); ++i){
         sum = pts[i].x + pts[i].y;
 
         if(maxSum<sum){
-            maxSum = sum;
+            maxSum   = sum;
             idMaxSum = i;
         }
         if(minSum>sum){
@@ -21,9 +21,10 @@ void sortPoints(std::vector<cv::Point2f> &outgrid ){
     }
 
     int minX = 99999999.999f;
-    int id2 = 0, id4 = 0;
-    for(int i=0; i<int(pts.size()); ++i){
-        if( i!=idMaxSum && i!=idMinSum){
+    size_t id2 = 0, id4 = 0;
+    for(size_t i=0; i<pts.size(); ++i){
+        if(    i!=idMaxSum
+            && i!=idMinSum){
             sum = pts[i].x;
             if( minX>sum ){
                 minX = int(sum);
@@ -32,8 +33,10 @@ void sortPoints(std::vector<cv::Point2f> &outgrid ){
         }
     }
 
-    for(int i=0; i<int(pts.size()); ++i){
-        if( i!=idMaxSum && i!=idMinSum && i!=id2){
+    for(size_t i=0; i<pts.size(); ++i){
+        if( i!=idMaxSum &&
+            i!=idMinSum &&
+            i!=id2){
             id4 = i;
         }
     }
@@ -48,11 +51,11 @@ void sortPoints(std::vector<cv::Point2f> &outgrid ){
     cv::Point2f d1,d2;
     d1 = pts[1] - pts[0];
     d2 = pts[2] - pts[3];
-    int newCol = int( (sqrt(d1.x*d1.x + d1.y*d1.y) + sqrt(d2.x*d2.x + d2.y*d2.y))/2.0  );
+    int newCol = int( (sqrt(d1.x*d1.x + d1.y*d1.y) + sqrt(d2.x*d2.x + d2.y*d2.y))/2.0f );
 
     d1 = pts[3] - pts[0];
     d2 = pts[2] - pts[1];
-    int newRow = int( (sqrt(d1.x*d1.x + d1.y*d1.y) + sqrt(d2.x*d2.x + d2.y*d2.y))/2.0  );
+    int newRow = int( (sqrt(d1.x*d1.x + d1.y*d1.y) + sqrt(d2.x*d2.x + d2.y*d2.y))/2.0f );
 
     outgrid[0] = cv::Point2f(       0 ,      0  );
     outgrid[1] = cv::Point2f(       0 ,newCol-1 );
@@ -87,7 +90,7 @@ void geometricTransformation(uchar *R , uchar *G , uchar *B, uint rows, uint col
     	// Copy image 
     	img.copyTo(src);
     
-        for(int i=0; i<int(pts.size()); ++i){
+        for(size_t i=0; i<pts.size(); ++i){
             circle( src, pts[i], 4.0, cv::Scalar( 0, 0, 255 ), 5, 8 );
     	}
 
@@ -95,7 +98,7 @@ void geometricTransformation(uchar *R , uchar *G , uchar *B, uint rows, uint col
         key = char(cv::waitKey(10));
     }
     img.copyTo(src);
-    for(int i=0; i<int(pts.size()); ++i)
+    for(size_t i=0; i<pts.size(); ++i)
         circle( src, pts[i], 4.0, cv::Scalar( 0, 0, 255 ), 5, 8 );
     imshow("Geometric Transformation", src);
     cv::waitKey(10);
@@ -112,7 +115,7 @@ void geometricTransformation(uchar *R , uchar *G , uchar *B, uint rows, uint col
     lambda = getPerspectiveTransform( inputQuad, outputQuad );
 
     cv::Mat out;
-    warpPerspective(img,out,lambda, cv::Size(outputQuad[2].x+1,outputQuad[2].y+1) );
+    warpPerspective(img,out,lambda, cv::Size(int(outputQuad[2].x+1),int(outputQuad[2].y+1)) );
 
     imshow("Out", out);
     cv::waitKey(0);

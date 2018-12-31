@@ -12,9 +12,9 @@ void minRectagle(std::vector<cv::Point> &pts, cv::Rect &rect){
 
     int xmin=99999999,ymin=99999999,xmax=-1,ymax=-1;
     int x,y;
-    for(int i = 0; i<int(pts.size());++i){
-        x = uint(pts[i].x);
-        y = uint(pts[i].y);
+    for(size_t i = 0; i<pts.size();++i){
+        x = int(pts[i].x);
+        y = int(pts[i].y);
 
         if(xmin > x) xmin = x;
         if(ymin > y) ymin = y;
@@ -33,7 +33,6 @@ void minmax( cv::Mat &result ,cv::Point &position ){
     minMaxLoc( result, &minVal, &maxVal, &position, &maxLoc, cv::Mat() );
     //position = minLoc;
 }
-
 
 
 void matching(cv::String pathTo){
@@ -64,7 +63,7 @@ void matching(cv::String pathTo){
     while (vertex.size()<4){
         img.copyTo(src);
 
-        for(int i=0; i<int(vertex.size()); ++i)
+        for(size_t i=0; i<vertex.size(); ++i)
             circle( src, vertex[i], 3.0, cv::Scalar( 0, 0, 255 ), 4, 8 );
 
         imshow(nameWindow, src);
@@ -83,10 +82,6 @@ void matching(cv::String pathTo){
     cv::waitKey(10);
 
     cv::Mat templ = gray( roi );
-    /*
-    imshow(nameWindow, templ);
-    cv::waitKey(0);
-*/
 
 /*
  *  Video Loop

@@ -1,14 +1,7 @@
 #ifndef BMP_H
 #define BMP_H
+#include "../includes.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-typedef unsigned char uchar;
-
-//gcc -o bmpV1 bmpV1.c
-//./bmpV1 linux_detergente.bmp -x2
 typedef struct BMP{
     char bm[2];					//(2 Bytes) BM (Tipo de archivo)
     int tamano;					//(4 Bytes) Tamaño del archivo en bytes
@@ -32,7 +25,7 @@ typedef struct BMP{
     uchar *pixel;
 }BMP;
 
-void abrir_imagen(BMP *imagen, char ruta[]);	//Función para abrir la imagen BMP
-void crear_imagen(BMP *imagen, char ruta[],int escala);	//Función para crear una imagen BMP
+void abrir_imagen(BMP *imagen, const char ruta[]);	//Función para abrir la imagen BMP
+void crear_imagen(BMP *imagen, const char ruta[],int escala);	//Función para crear una imagen BMP
 
 #endif // BMP_H

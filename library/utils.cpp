@@ -15,11 +15,32 @@ void showColorModel(uchar* &C1,uchar* &C2,uchar* &C3,int rows,int cols,cv::Strin
     if(coeffCol>1.0f || coeffRow>1.0f){
         if(coeffCol>coeffRow) coff = coeffCol;
         else                  coff = coeffRow;
-        cv::Size newsize(big.cols/coff,big.rows/coff);
+        cv::Size newsize(int(big.cols/coff),int(big.rows/coff));
         cv::resize(big, big, newsize, 0, 0, CV_INTER_LINEAR);
     }
 
     // Show
     cv::namedWindow( name );
     cv::imshow( name, big );
+}
+
+void abrir_imagen(uchar* &R, uchar* &G, uchar* &B,
+                  int &rows, int &cols,
+                  const std::string &pathTo){
+    // Getting data
+    cv::Mat img = cv::imread(pathTo);
+    rows = img.rows;
+    cols = img.cols;
+
+    R = new uchar[rows*cols];
+    G = new uchar[rows*cols];
+    B = new uchar[rows*cols];
+
+#   pragma omp parallel for collapse(2) num_threads(4)
+    for(int i=0; i<rows; i++) for(int j=0; j<cols; j++){
+        int id = j + i*cols;
+        B[id] = img.at<cv::Vec3b>(i,j)[0];
+        G[id] = img.at<cv::Vec3b>(i,j)[1];
+        R[id] = img.at<cv::Vec3b>(i,j)[2];
+    }
 }
