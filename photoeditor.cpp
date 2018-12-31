@@ -29,10 +29,13 @@ PhotoEditor::~PhotoEditor(){
 
 void PhotoEditor::on_actionAbrir_triggered(){
     QString fileName = QFileDialog::getOpenFileName(this,
-                                 tr("Abrir Imagen BMP"), "",
-                                 tr("Imagen BMP (*.bmp);;Imagen (*.bmp *.png *.jpg  *.jpeg *.gif *.tif)"));
+                                 tr("Abrir Imagen BMP"), "/home/victor/Imágenes/",
+                                 tr("Imagen BMP (*.bmp);;Imagen (*.bmp *.png *.jpg  *.jpeg *.gif *.tif);;Video (*.mp4 *.avi *.mpg *.mpeg)"));
     pathTo = fileName.toStdString();
-    abrir_imagen(R,G,B,rows,cols,pathTo);
+
+    // BMP format
+    if( check_BMP_format(pathTo) ) abrir_imagen(&img,pathTo.c_str());
+    if( checkImageformat(pathTo) ) abrir_imagen(R,G,B,rows,cols,pathTo);
 }
 
 void PhotoEditor::on_actionGuardar_triggered(){
@@ -98,7 +101,7 @@ void PhotoEditor::on_pushButton_clicked(){
  *    - 2: HSV       - 6: YUV
  *    - 3: XYZ       - 7: YCbCr
  */
-/*
+/*abrir_imagen(BMP *imagen, const char *ruta){
     transformColorModel(R,G,B,C1,C2,C3,rows*cols,2);
 
     cv::Mat out = cv::Mat(rows,cols,CV_8UC1,C1);

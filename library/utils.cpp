@@ -44,3 +44,39 @@ void abrir_imagen(uchar* &R, uchar* &G, uchar* &B,
         R[id] = img.at<cv::Vec3b>(i,j)[2];
     }
 }
+
+
+bool check_BMP_format(const std::string &pathTo){
+    QFileInfo fi(QString::fromStdString(pathTo));
+    QString ext = fi.suffix();
+
+    if ( ext == "bmp" ) return  true;
+    else                return false;
+}
+
+
+bool checkImageformat(const std::string &pathTo){
+    QFileInfo fi(QString::fromStdString(pathTo));
+    QString ext = fi.suffix();
+
+         if ( ext ==  "bmp" ) return  true;
+    else if ( ext ==  "png" ) return  true;
+    else if ( ext ==  "jpg" ) return  true;
+    else if ( ext ==  "gif" ) return  true;
+    else if ( ext ==  "tif" ) return  true;
+    else if ( ext == "jpeg" ) return  true;
+    else                      return false;
+}
+
+
+bool checkVideoformat(const std::string &pathTo){
+    QFileInfo fi(QString::fromStdString(pathTo));
+    QString ext = fi.suffix();
+
+         if ( ext ==  "mp4" ) return  true;
+    else if ( ext ==  "avi" ) return  true;
+    else if ( ext ==  "mpg" ) return  true;
+    else if ( ext == "mpeg" ) return  true;
+    else                      return false;
+}
+
