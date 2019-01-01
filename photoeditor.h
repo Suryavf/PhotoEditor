@@ -28,9 +28,10 @@ public:
     void saveImage(const QString &dirFile);
 
 private slots:
-
     void on_pushButton_clicked();
-    void on_open_clicked();
+
+    void setDisabledImageSection(const bool &_v);
+    void setDisabledVideoSection(const bool &_v);
 
 /*
  *  Read/Write BMP

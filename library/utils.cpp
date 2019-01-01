@@ -1,6 +1,9 @@
 #include "utils.h"
 
 void showColorModel(uchar* &C1,uchar* &C2,uchar* &C3,int rows,int cols,cv::String name){
+
+
+
     cv::Mat big;
     cv::Mat matArray[] = { cv::Mat(rows,cols,CV_8UC1,C1),
                            cv::Mat(rows,cols,CV_8UC1,C2),

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
-    <height>242</height>
+    <width>344</width>
+    <height>267</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
-      <width>256</width>
-      <height>192</height>
+      <y>-10</y>
+      <width>351</width>
+      <height>211</height>
      </rect>
     </property>
    </widget>
@@ -37,26 +37,13 @@
      <string>Test</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="open">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>89</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Open</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>260</width>
+     <width>344</width>
      <height>22</height>
     </rect>
    </property>
@@ -80,8 +67,28 @@
     <addaction name="actionYUV"/>
     <addaction name="actionYCbCr"/>
    </widget>
+   <widget class="QMenu" name="menuFilter">
+    <property name="title">
+     <string>Filter</string>
+    </property>
+    <addaction name="actionGaussianFilter"/>
+    <addaction name="actionLaplaceFilter"/>
+    <addaction name="actionGabor0Filter"/>
+    <addaction name="actionGabor45Filter"/>
+    <addaction name="actionGabor90Filter"/>
+    <addaction name="actionGabor135Filter"/>
+   </widget>
+   <widget class="QMenu" name="menuFFT">
+    <property name="title">
+     <string>FFT</string>
+    </property>
+    <addaction name="actionMagnitudeFFT"/>
+    <addaction name="actionPhaseFFT"/>
+   </widget>
    <addaction name="menuPhoto_Ed"/>
    <addaction name="menuModel"/>
+   <addaction name="menuFilter"/>
+   <addaction name="menuFFT"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -140,6 +147,46 @@
   <action name="actionYCbCr">
    <property name="text">
     <string>YCbCr</string>
+   </property>
+  </action>
+  <action name="actionGaussianFilter">
+   <property name="text">
+    <string>Gaussian</string>
+   </property>
+  </action>
+  <action name="actionLaplaceFilter">
+   <property name="text">
+    <string>Laplace</string>
+   </property>
+  </action>
+  <action name="actionGabor0Filter">
+   <property name="text">
+    <string>Gabor 0°</string>
+   </property>
+  </action>
+  <action name="actionGabor45Filter">
+   <property name="text">
+    <string>Gabor 45°</string>
+   </property>
+  </action>
+  <action name="actionGabor90Filter">
+   <property name="text">
+    <string>Gabor 90°</string>
+   </property>
+  </action>
+  <action name="actionGabor135Filter">
+   <property name="text">
+    <string>Gabor 135°</string>
+   </property>
+  </action>
+  <action name="actionMagnitudeFFT">
+   <property name="text">
+    <string>Magnitude</string>
+   </property>
+  </action>
+  <action name="actionPhaseFFT">
+   <property name="text">
+    <string>Phase</string>
    </property>
   </action>
  </widget>

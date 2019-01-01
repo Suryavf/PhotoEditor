@@ -17,9 +17,39 @@
 #include "GeomTrans/geomTransform.h"
 #include "Video/matching.h"
 
+
+void PhotoEditor::setDisabledImageSection(const bool &_v){
+    // Model color Disable
+    ui->actionCMY  ->setEnabled(_v);
+    ui->actionHSL  ->setEnabled(_v);
+    ui->actionHSV  ->setEnabled(_v);
+    ui->actionLMS  ->setEnabled(_v);
+    ui->actionXYZ  ->setEnabled(_v);
+    ui->actionYIQ  ->setEnabled(_v);
+    ui->actionYUV  ->setEnabled(_v);
+    ui->actionYCbCr->setEnabled(_v);
+
+    // Filter Disable
+    ui->actionGabor0Filter  ->setEnabled(_v);
+    ui->actionGabor45Filter ->setEnabled(_v);
+    ui->actionGabor90Filter ->setEnabled(_v);
+    ui->actionLaplaceFilter ->setEnabled(_v);
+    ui->actionGabor135Filter->setEnabled(_v);
+    ui->actionGaussianFilter->setEnabled(_v);
+
+    // FFT Disable
+    ui->actionPhaseFFT    ->setEnabled(_v);
+    ui->actionMagnitudeFFT->setEnabled(_v);
+}
+
+void PhotoEditor::setDisabledVideoSection(const bool &_v){
+
+}
+
 PhotoEditor::PhotoEditor(QWidget *parent) : QMainWindow(parent),
                                             ui(new Ui::PhotoEditor){
     ui->setupUi(this);
+    setDisabledImageSection(false);
 }
 
 PhotoEditor::~PhotoEditor(){
@@ -36,6 +66,8 @@ void PhotoEditor::on_actionAbrir_triggered(){
     // BMP format
     if( check_BMP_format(pathTo) ) abrir_imagen(&img,pathTo.c_str());
     if( checkImageformat(pathTo) ) abrir_imagen(R,G,B,rows,cols,pathTo);
+
+    setDisabledImageSection(true);
 }
 
 void PhotoEditor::on_actionGuardar_triggered(){
@@ -44,25 +76,6 @@ void PhotoEditor::on_actionGuardar_triggered(){
                                  tr("Imagen BMP (*.bmp);;All Files (*)"));
     pathTo = fileName.toStdString();
     crear_imagen(&img,pathTo.c_str(),1);
-}
-
-
-void PhotoEditor::on_open_clicked(){
-    cv::Mat src = cv::imread("/home/victor/Documentos/Imagenes/PhotoEditor/lena.jpg");
-    rows = src.rows;
-    cols = src.cols;
-
-    R = new uchar[rows*cols];
-    G = new uchar[rows*cols];
-    B = new uchar[rows*cols];
-
-    int id = 0;
-    for(int i=0; i<rows; i++) for(int j=0; j<cols; j++){
-        B[id] = src.at<cv::Vec3b>(i,j)[0];
-        G[id] = src.at<cv::Vec3b>(i,j)[1];
-        R[id] = src.at<cv::Vec3b>(i,j)[2];
-        ++id;
-    }
 }
 
 
