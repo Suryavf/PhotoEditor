@@ -85,10 +85,17 @@
     <addaction name="actionMagnitudeFFT"/>
     <addaction name="actionPhaseFFT"/>
    </widget>
+   <widget class="QMenu" name="menuVideo">
+    <property name="title">
+     <string>Video</string>
+    </property>
+    <addaction name="actionTrackingVideo"/>
+   </widget>
    <addaction name="menuPhoto_Ed"/>
    <addaction name="menuModel"/>
    <addaction name="menuFilter"/>
    <addaction name="menuFFT"/>
+   <addaction name="menuVideo"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -187,6 +194,11 @@
   <action name="actionPhaseFFT">
    <property name="text">
     <string>Phase</string>
+   </property>
+  </action>
+  <action name="actionTrackingVideo">
+   <property name="text">
+    <string>Tracking</string>
    </property>
   </action>
  </widget>

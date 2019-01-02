@@ -18,38 +18,11 @@
 #include "Video/matching.h"
 
 
-void PhotoEditor::setDisabledImageSection(const bool &_v){
-    // Model color Disable
-    ui->actionCMY  ->setEnabled(_v);
-    ui->actionHSL  ->setEnabled(_v);
-    ui->actionHSV  ->setEnabled(_v);
-    ui->actionLMS  ->setEnabled(_v);
-    ui->actionXYZ  ->setEnabled(_v);
-    ui->actionYIQ  ->setEnabled(_v);
-    ui->actionYUV  ->setEnabled(_v);
-    ui->actionYCbCr->setEnabled(_v);
-
-    // Filter Disable
-    ui->actionGabor0Filter  ->setEnabled(_v);
-    ui->actionGabor45Filter ->setEnabled(_v);
-    ui->actionGabor90Filter ->setEnabled(_v);
-    ui->actionLaplaceFilter ->setEnabled(_v);
-    ui->actionGabor135Filter->setEnabled(_v);
-    ui->actionGaussianFilter->setEnabled(_v);
-
-    // FFT Disable
-    ui->actionPhaseFFT    ->setEnabled(_v);
-    ui->actionMagnitudeFFT->setEnabled(_v);
-}
-
-void PhotoEditor::setDisabledVideoSection(const bool &_v){
-
-}
-
 PhotoEditor::PhotoEditor(QWidget *parent) : QMainWindow(parent),
                                             ui(new Ui::PhotoEditor){
     ui->setupUi(this);
     setDisabledImageSection(false);
+    setDisabledVideoSection(false);
 }
 
 PhotoEditor::~PhotoEditor(){
@@ -64,10 +37,26 @@ void PhotoEditor::on_actionAbrir_triggered(){
     pathTo = fileName.toStdString();
 
     // BMP format
-    if( check_BMP_format(pathTo) ) abrir_imagen(&img,pathTo.c_str());
-    if( checkImageformat(pathTo) ) abrir_imagen(R,G,B,rows,cols,pathTo);
+    if( check_BMP_format(pathTo) ){
+        abrir_imagen(&img,pathTo.c_str());
+        setDisabledImageSection( true);
+        setDisabledVideoSection(false);
+    }
 
-    setDisabledImageSection(true);
+    // All image format
+    if( checkImageformat(pathTo) ){
+        abrir_imagen(R,G,B,rows,cols,pathTo);
+        setDisabledImageSection( true);
+        setDisabledVideoSection(false);
+    }
+
+    // All video format
+    if( checkVideoformat(pathTo) ){
+        abrir_imagen(R,G,B,rows,cols,pathTo);
+        setDisabledImageSection(false);
+        setDisabledVideoSection( true);
+    }
+
 }
 
 void PhotoEditor::on_actionGuardar_triggered(){
@@ -273,4 +262,32 @@ void PhotoEditor::on_actionYCbCr_triggered(){
     showColorModel(C1,C2,C3,rows,cols,"YCbCr");
 
     delete [] C1; delete [] C2; delete [] C3;
+}
+
+void PhotoEditor::setDisabledImageSection(const bool &_v){
+    // Model color Disable
+    ui->actionCMY  ->setEnabled(_v);
+    ui->actionHSL  ->setEnabled(_v);
+    ui->actionHSV  ->setEnabled(_v);
+    ui->actionLMS  ->setEnabled(_v);
+    ui->actionXYZ  ->setEnabled(_v);
+    ui->actionYIQ  ->setEnabled(_v);
+    ui->actionYUV  ->setEnabled(_v);
+    ui->actionYCbCr->setEnabled(_v);
+
+    // Filter Disable
+    ui->actionGabor0Filter  ->setEnabled(_v);
+    ui->actionGabor45Filter ->setEnabled(_v);
+    ui->actionGabor90Filter ->setEnabled(_v);
+    ui->actionLaplaceFilter ->setEnabled(_v);
+    ui->actionGabor135Filter->setEnabled(_v);
+    ui->actionGaussianFilter->setEnabled(_v);
+
+    // FFT Disable
+    ui->actionPhaseFFT    ->setEnabled(_v);
+    ui->actionMagnitudeFFT->setEnabled(_v);
+}
+
+void PhotoEditor::setDisabledVideoSection(const bool &_v){
+    ui->actionTrackingVideo->setEnabled(_v);
 }

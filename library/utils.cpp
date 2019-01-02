@@ -1,13 +1,14 @@
 #include "utils.h"
 
 void showColorModel(uchar* &C1,uchar* &C2,uchar* &C3,int rows,int cols,cv::String name){
-
-
-
     cv::Mat big;
     cv::Mat matArray[] = { cv::Mat(rows,cols,CV_8UC1,C1),
                            cv::Mat(rows,cols,CV_8UC1,C2),
                            cv::Mat(rows,cols,CV_8UC1,C3)};
+    cv::normalize(matArray[0], matArray[0], 0, 255,cv::NORM_MINMAX, CV_8UC1);
+    cv::normalize(matArray[1], matArray[1], 0, 255,cv::NORM_MINMAX, CV_8UC1);
+    cv::normalize(matArray[2], matArray[2], 0, 255,cv::NORM_MINMAX, CV_8UC1);
+
     cv::hconcat(matArray,3,big);
 
     // Resize
@@ -30,7 +31,7 @@ void showColorModel(uchar* &C1,uchar* &C2,uchar* &C3,int rows,int cols,cv::Strin
 void abrir_imagen(uchar* &R, uchar* &G, uchar* &B,
                   int &rows, int &cols,
                   const std::string &pathTo){
-    // Getting data
+    // Getting data0.32898030
     cv::Mat img = cv::imread(pathTo);
     rows = img.rows;
     cols = img.cols;

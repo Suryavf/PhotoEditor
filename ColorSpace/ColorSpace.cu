@@ -26,10 +26,10 @@ __global__ void rgb2lms(uchar *R, uchar *G, uchar *B,
         r = (float)R[index];
         g = (float)G[index];
         b = (float)B[index];
-         
-        l = (uchar)(17.8824*r + 43.5161*g + 4.1193*b);
-        m = (uchar)( 3.4557*r + 27.1554*g + 3.8671*b);
-        s = (uchar)(0.02996*r + 0.18431*g + 1.4670*b);
+
+        l = uchar(0.271873f*r + 0.661593f*g + 0.062627f*b);
+        m = uchar(0.099837f*r + 0.784534f*g + 0.111723f*b);
+        s = uchar(0.017750f*r + 0.109197f*g + 0.869146f*b);
          
         L[index] = l;
         M[index] = m;
@@ -51,13 +51,13 @@ __global__ void rgb2xyz(uchar *R, uchar *G, uchar *B,
         float r, g, b;
         uchar x, y, z;
 
-        r = (float)R[index];
-        g = (float)G[index];
-        b = (float)B[index];
+        r = float(R[index]);
+        g = float(G[index]);
+        b = float(B[index]);
          
-        x = (uchar)(0.5767309*r + 0.1855540*g + 0.1881852*b);
-        y = (uchar)(0.2973769*r + 0.6273491*g + 0.0752741*b);
-        z = (uchar)(0.0270343*r + 0.0706872*g + 0.9911085*b);
+        x = uchar(0.604410f*r + 0.194460f*g + 0.197220f*b);
+        y = uchar(0.296215f*r + 0.624898f*g + 0.074980f*b);
+        z = uchar(0.024732f*r + 0.064667f*g + 0.906695f*b);
          
         X[index] = x;
         Y[index] = y;
@@ -105,10 +105,10 @@ __global__ void rgb2hsl(uchar *R, uchar *G, uchar *B,
         float r, g, b, min, max, c;
         float h, s, l;
 
-        r = (float)R[index];
-        g = (float)G[index];
-        b = (float)B[index];
-        
+        r = float(R[index]);
+        g = float(G[index]);
+        b = float(B[index]);
+
         // min/max calculate
         max = fmaxf( r ,g);
         max = fmaxf(max,b);
@@ -119,12 +119,12 @@ __global__ void rgb2hsl(uchar *R, uchar *G, uchar *B,
         c = max - min;
 
         // Hue and chroma
-        if      ( max == r ){ h = fmodf((g-b)/c , 6.0);
-        }else if( max == g ){ h =       (b-r)/c + 2.0 ;
-        }else if( max == b ){ h =       (r-g)/c + 4.0 ;
-        }else               { h = 0.0f;
+              if( max == r ){ h = fmodf((g-b)/c , 6.0f);
+        }else if( max == g ){ h =       (b-r)/c + 2.0f ;
+        }else if( max == b ){ h =       (r-g)/c + 4.0f ;
+        }else               { h =                 0.0f ;
         }
-        h = h*255/6;
+        h = h*255/360;
 
         // Lightness
         l = (max + min)/2.0;
@@ -156,9 +156,9 @@ __global__ void rgb2hsv(uchar *R, uchar *G, uchar *B,
         float r, g, b, min, max, c;
         float h, s, v;
         
-        r = (float)R[index];
-        g = (float)G[index];
-        b = (float)B[index];
+        r = float(R[index]);
+        g = float(G[index]);
+        b = float(B[index]);
         
         // min/max calculate
         max = fmaxf( r ,g);
@@ -170,12 +170,12 @@ __global__ void rgb2hsv(uchar *R, uchar *G, uchar *B,
         c = max - min;
 
         // Hue and chroma
-        if      ( max == r ){ h = fmodf((g-b)/c , 6.0);
-        }else if( max == g ){ h =       (b-r)/c + 2.0 ;
-        }else if( max == b ){ h =       (r-g)/c + 4.0 ;
-        }else               { h = 0.0f;
+              if( max == r ){ h = fmodf((g-b)/c , 6.0f);
+        }else if( max == g ){ h =       (b-r)/c + 2.0f ;
+        }else if( max == b ){ h =       (r-g)/c + 4.0f ;
+        }else               { h =                 0.0f ;
         }
-        h = h*255/6;
+        h = h*255/360;
 
         // Lightness
         v = max;
@@ -184,7 +184,7 @@ __global__ void rgb2hsv(uchar *R, uchar *G, uchar *B,
         if (v == 0.0f){
             s = 0.0;
         }else{
-            s = c/v;
+            s = c*2.55f/v;
         }
 
         H[index] = (uchar)h;
@@ -205,14 +205,14 @@ __global__ void rgb2yiq(uchar *R, uchar *G, uchar *B,
     if(index < N[0]){
         float r, g, b;
         uchar y, i, q;
- 
-        r = ((float)R[index])/255.0;
-        g = ((float)G[index])/255.0;
-        b = ((float)B[index])/255.0;
-         
-        y = (uchar)((0.299*r + 0.587*g + 0.114*b         )*255.0);
-        i = (uchar)((0.596*r - 0.274*g - 0.322*b + 0.5957)*127.5);
-        q = (uchar)((0.211*r - 0.523*g + 0.312*b + 0.5226)*127.5);
+
+        r = float(R[index]);
+        g = float(G[index]);
+        b = float(B[index]);
+
+        y = uchar( 0.29783f*r + 0.58471f*g + 0.11355f*b          );
+        i = uchar( 0.49805f*r - 0.22897f*g - 0.26908f*b + 127.5f );
+        q = uchar( 0.20093f*r - 0.49805f*g + 0.29711f*b + 127.5f );
          
         Y[index] = y;
         I[index] = i;
@@ -232,11 +232,11 @@ __global__ void rgb2yuv(uchar *R, uchar *G, uchar *B,
     if(index < N[0]){
         float r, g, b;
         uchar y, u, v;
- 
-        r = (float)R[index];
-        g = (float)G[index];
-        b = (float)B[index];
-         
+
+        r = float(R[index]);
+        g = float(G[index]);
+        b = float(B[index]);
+
         y = (uchar)( 0.2126 *r + 0.7152 *g + 0.0722 *b);
         u = (uchar)(-0.09991*r - 0.33609*g + 0.436  *b);
         v = (uchar)( 0.6150 *r - 0.55861*g - 0.05639*b);
@@ -263,10 +263,10 @@ __global__ void rgb2yCbCr(uchar *R, uchar *G , uchar *B,
         r = (float)R[index];
         g = (float)G[index];
         b = (float)B[index];
-         
-        y  = (uchar)( 0.299*r + 0.587*g +  0.114*b);
-        cb = (uchar)(-0.169*r - 0.331*g +  0.499*b + 128);
-        cr = (uchar)( 0.499*r - 0.418*g - 0.0813*b + 128);
+
+        y  = uchar( 0.211770f*r + 0.712406f*g + 0.071918f*b);
+        cb = uchar(-0.114130f*r - 0.383920f*g + 0.498050f*b + 127.50f);
+        cr = uchar( 0.498047f*r - 0.452380f*g - 0.045666f*b + 127.50f);
          
         Y [index] =  y;
         Cb[index] = cb;
