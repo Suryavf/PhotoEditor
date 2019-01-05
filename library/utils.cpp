@@ -28,6 +28,34 @@ void showColorModel(uchar* &C1,uchar* &C2,uchar* &C3,int rows,int cols,cv::Strin
     cv::imshow( name, big );
 }
 
+
+void showColorImage(uchar* &R,uchar* &G,uchar* &B,int rows,int cols,cv::String name){
+    cv::Mat big;
+    std::vector<cv::Mat> channels;
+
+    channels.push_back(cv::Mat(rows,cols,CV_8UC1,B));
+    channels.push_back(cv::Mat(rows,cols,CV_8UC1,G));
+    channels.push_back(cv::Mat(rows,cols,CV_8UC1,R));
+    cv::merge(channels,big);
+
+    // Resize
+    float coeffCol, coeffRow,coff;
+    coeffCol = float(big.cols)/1910.0f;
+    coeffRow = float(big.rows)/1000.0f;
+
+    if(coeffCol>1.0f || coeffRow>1.0f){
+        if(coeffCol>coeffRow) coff = coeffCol;
+        else                  coff = coeffRow;
+        cv::Size newsize(int(big.cols/coff),int(big.rows/coff));
+        cv::resize(big, big, newsize, 0, 0, CV_INTER_LINEAR);
+    }
+
+    // Show
+    cv::namedWindow( name );
+    cv::imshow( name, big );
+}
+
+
 void abrir_imagen(uchar* &R, uchar* &G, uchar* &B,
                   int &rows, int &cols,
                   const std::string &pathTo){

@@ -53,6 +53,15 @@ private slots:
     void on_actionYUV_triggered();
     void on_actionYCbCr_triggered();
 
+    void on_actionGaussianFilter_triggered();
+    void on_actionLaplaceFilter_triggered();
+    void on_actionGabor0Filter_triggered();
+    void on_actionGabor45Filter_triggered();
+    void on_actionGabor90Filter_triggered();
+    void on_actionGabor135Filter_triggered();
+    
+    void on_actionMagnitudeFFT_triggered();
+
 private:
     Ui::PhotoEditor         *ui;
     QGraphicsScene       *scene;

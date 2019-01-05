@@ -264,6 +264,70 @@ void PhotoEditor::on_actionYCbCr_triggered(){
     delete [] C1; delete [] C2; delete [] C3;
 }
 
+void PhotoEditor::on_actionGaussianFilter_triggered(){
+    Filter blur(GAUSS_KERNEL);
+
+    for(int q=0 ; q<5;++q){
+        blur.convolution(R,R,rows,cols,4);
+        blur.convolution(G,G,rows,cols,4);
+        blur.convolution(B,B,rows,cols,4);
+    }
+
+    showColorImage(R,G,B,rows,cols,"Gaussian Filter");
+}
+
+void PhotoEditor::on_actionLaplaceFilter_triggered(){
+    Filter blur(LAPLACE_KERNEL);
+
+    for(int q=0 ; q<5;++q){
+        blur.convolution(R,R,rows,cols,4);
+        blur.convolution(G,G,rows,cols,4);
+        blur.convolution(B,B,rows,cols,4);
+    }
+
+    showColorImage(R,G,B,rows,cols,"Laplacian Filter");
+}
+
+void PhotoEditor::on_actionGabor0Filter_triggered(){
+    Filter blur(GABOR_00_KERNEL);
+
+    blur.convolution(R,R,rows,cols,4);
+    blur.convolution(G,G,rows,cols,4);
+    blur.convolution(B,B,rows,cols,4);
+
+    showColorImage(R,G,B,rows,cols,"Gabor 0° Filter");
+}
+
+void PhotoEditor::on_actionGabor45Filter_triggered(){
+    Filter blur(GABOR_45_KERNEL);
+
+    blur.convolution(R,R,rows,cols,4);
+    blur.convolution(G,G,rows,cols,4);
+    blur.convolution(B,B,rows,cols,4);
+
+    showColorImage(R,G,B,rows,cols,"Gabor 45° Filter");
+}
+
+void PhotoEditor::on_actionGabor90Filter_triggered(){
+    Filter blur(GABOR_90_KERNEL);
+
+    blur.convolution(R,R,rows,cols,4);
+    blur.convolution(G,G,rows,cols,4);
+    blur.convolution(B,B,rows,cols,4);
+
+    showColorImage(R,G,B,rows,cols,"Gabor 90° Filter");
+}
+
+void PhotoEditor::on_actionGabor135Filter_triggered(){
+    Filter blur(GABOR_135_KERNEL);
+
+    blur.convolution(R,R,rows,cols,4);
+    blur.convolution(G,G,rows,cols,4);
+    blur.convolution(B,B,rows,cols,4);
+
+    showColorImage(R,G,B,rows,cols,"Gabor 135° Filter");
+}
+
 void PhotoEditor::setDisabledImageSection(const bool &_v){
     // Model color Disable
     ui->actionCMY  ->setEnabled(_v);
@@ -290,4 +354,16 @@ void PhotoEditor::setDisabledImageSection(const bool &_v){
 
 void PhotoEditor::setDisabledVideoSection(const bool &_v){
     ui->actionTrackingVideo->setEnabled(_v);
+}
+
+
+void PhotoEditor::on_actionMagnitudeFFT_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    executeFFT(R,G,B,C1, uint(rows), uint(cols));
+
+    cv::Mat out = cv::Mat(rows,cols,CV_8UC1,C1);
+    cv::namedWindow( "FFT" );
+    cv::imshow( "FFT", out );
+
+    delete [] C1;
 }
