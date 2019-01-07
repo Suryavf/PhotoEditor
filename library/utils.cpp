@@ -77,6 +77,14 @@ void abrir_imagen(uchar* &R, uchar* &G, uchar* &B,
     }
 }
 
+void rgb2mat(uchar*  &R,uchar*  &G,uchar*  &B,int &rows, int &cols, cv::Mat &image){
+    std::vector<cv::Mat> channels;
+
+    channels.push_back(cv::Mat(rows,cols,CV_8UC1,B));
+    channels.push_back(cv::Mat(rows,cols,CV_8UC1,G));
+    channels.push_back(cv::Mat(rows,cols,CV_8UC1,R));
+    cv::merge(channels,image);
+}
 
 bool check_BMP_format(const std::string &pathTo){
     QFileInfo fi(QString::fromStdString(pathTo));

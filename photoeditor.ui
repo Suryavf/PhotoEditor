@@ -6,29 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>344</width>
-    <height>267</height>
+    <width>361</width>
+    <height>324</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>PhotoEditor</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QGraphicsView" name="Image">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>-10</y>
-      <width>351</width>
-      <height>211</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>110</y>
+      <x>0</x>
+      <y>260</y>
       <width>89</width>
       <height>25</height>
      </rect>
@@ -37,13 +27,23 @@
      <string>Test</string>
     </property>
    </widget>
+   <widget class="QGraphicsView" name="original">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>361</width>
+      <height>261</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>344</width>
+     <width>361</width>
      <height>22</height>
     </rect>
    </property>
@@ -105,7 +105,6 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionAbrir">
    <property name="text">
     <string>Abrir</string>

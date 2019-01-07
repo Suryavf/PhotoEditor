@@ -23,6 +23,10 @@ PhotoEditor::PhotoEditor(QWidget *parent) : QMainWindow(parent),
     ui->setupUi(this);
     setDisabledImageSection(false);
     setDisabledVideoSection(false);
+
+    // Create Original scene
+    ui->original->setScene(new QGraphicsScene(this));
+    ui->original->scene()->addItem(&PixOriginal);
 }
 
 PhotoEditor::~PhotoEditor(){
@@ -45,9 +49,16 @@ void PhotoEditor::on_actionAbrir_triggered(){
 
     // All image format
     if( checkImageformat(pathTo) ){
+        cv::Mat image;
+
         abrir_imagen(R,G,B,rows,cols,pathTo);
         setDisabledImageSection( true);
         setDisabledVideoSection(false);
+
+        rgb2mat(R,G,B,rows,cols,image);
+        QImage qframe(image.data,image.cols,image.rows,int(image.step),QImage::Format_RGB888);
+        PixOriginal.setPixmap( QPixmap::fromImage(qframe.rgbSwapped()) );
+        ui->original->fitInView(&PixOriginal, Qt::KeepAspectRatio);
     }
 
     // All video format
@@ -56,7 +67,6 @@ void PhotoEditor::on_actionAbrir_triggered(){
         setDisabledImageSection(false);
         setDisabledVideoSection( true);
     }
-
 }
 
 void PhotoEditor::on_actionGuardar_triggered(){

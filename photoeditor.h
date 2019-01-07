@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QGraphicsPixmapItem>
 #include <library/bmp.h>
 
 #include "includes.h"
@@ -61,19 +62,19 @@ private slots:
     void on_actionGabor135Filter_triggered();
     
     void on_actionMagnitudeFFT_triggered();
-
     void on_actionPhaseFFT_triggered();
 
 private:
-    Ui::PhotoEditor         *ui;
-    QGraphicsScene       *scene;
-    QGraphicsView *graphicsView;
+    Ui::PhotoEditor *ui;
 
     BMP   img;
     uchar *R, *G, *B;
 
     int rows;
     int cols;
+
+    // Graphics Pixmap
+    QGraphicsPixmapItem PixOriginal;
 
     std::string pathTo;
 };
