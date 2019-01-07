@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
+#include <QMessageBox>
 #include <library/bmp.h>
 
 #include "includes.h"
@@ -29,8 +30,6 @@ public:
     void saveImage(const QString &dirFile);
 
 private slots:
-    void on_pushButton_clicked();
-
     void setDisabledImageSection(const bool &_v);
     void setDisabledVideoSection(const bool &_v);
 
@@ -65,6 +64,8 @@ private slots:
     void on_actionPhaseFFT_triggered();
 
     void on_actionPerspective_triggered();
+
+    void on_actionTrackingVideo_triggered();
 
 private:
     Ui::PhotoEditor *ui;

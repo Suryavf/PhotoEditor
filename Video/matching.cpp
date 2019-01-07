@@ -35,16 +35,11 @@ void minmax( cv::Mat &result ,cv::Point &position ){
 }
 
 
-void matching(cv::String pathTo){
+void matching(cv::VideoCapture &capture){
 /*
  *  Open Video
  *  ----------
  */
-    cv::VideoCapture capture(pathTo);
-    if (!capture.isOpened()) printf("Failed to open the video");
-
-    std::cout << "Luego de capture\n";
-
     cv::Mat img, src, gray;
     cv::String nameWindow = "Video";
 
@@ -103,7 +98,6 @@ void matching(cv::String pathTo){
         double a,b;
         cv::Point  c;
         cv::minMaxLoc( result, &a, &b, &post, &c);
-        std::cout << "(" << post.x << "," << post.y << ")" << std::endl;
 
         // Show image
         cv::circle( img, post, 3.0, cv::Scalar( 255, 0, 0 ), 4, 8 );

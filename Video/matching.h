@@ -3,6 +3,6 @@
 
 #include "../includes.h"
 
-void matching(cv::String pathTo);
+void matching(cv::VideoCapture &capture);
 
 #endif // MATCHING_H

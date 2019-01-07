@@ -49,12 +49,11 @@ void PhotoEditor::on_actionAbrir_triggered(){
 
     // All image format
     if( checkImageformat(pathTo) ){
-        cv::Mat image;
-
         abrir_imagen(R,G,B,rows,cols,pathTo);
         setDisabledImageSection( true);
         setDisabledVideoSection(false);
 
+        cv::Mat image;
         rgb2mat(R,G,B,rows,cols,image);
         QImage qframe(image.data,image.cols,image.rows,int(image.step),QImage::Format_RGB888);
         PixOriginal.setPixmap( QPixmap::fromImage(qframe.rgbSwapped()) );
@@ -63,9 +62,20 @@ void PhotoEditor::on_actionAbrir_triggered(){
 
     // All video format
     if( checkVideoformat(pathTo) ){
-        abrir_imagen(R,G,B,rows,cols,pathTo);
+        video = cv::VideoCapture(pathTo);
+        if (!video.isOpened()){
+            QMessageBox messageBox;
+            messageBox.critical(0,"Error","Failed to open the video");
+            messageBox.setFixedSize(500,200);
+        }
         setDisabledImageSection(false);
         setDisabledVideoSection( true);
+
+        cv::Mat image;
+        video >> image;
+        QImage qframe(image.data,image.cols,image.rows,int(image.step),QImage::Format_RGB888);
+        PixOriginal.setPixmap( QPixmap::fromImage(qframe.rgbSwapped()) );
+        ui->original->fitInView(&PixOriginal, Qt::KeepAspectRatio);
     }
 }
 
@@ -75,115 +85,6 @@ void PhotoEditor::on_actionGuardar_triggered(){
                                  tr("Imagen BMP (*.bmp);;All Files (*)"));
     pathTo = fileName.toStdString();
     crear_imagen(&img,pathTo.c_str(),1);
-}
-
-
-void PhotoEditor::on_pushButton_clicked(){
-
-    // Read image
-    cv::Mat img = cv::imread("/home/victor/Documentos/Imagenes/PhotoEditor/lena.jpg");
-    int rows = img.rows;
-    int cols = img.cols;
-
-    std::cout << "size: (" << rows << "," << cols  << ")"<< std::endl;
-
-    unsigned char *_R = new unsigned char[rows*cols];
-    unsigned char *_G = new unsigned char[rows*cols];
-    unsigned char *_B = new unsigned char[rows*cols];
-
-    // Getting data
-    int id = 0;
-    for(int i=0; i<rows; i++) for(int j=0; j<cols; j++){
-        _B[id] = img.at<cv::Vec3b>(i,j)[0];
-        _G[id] = img.at<cv::Vec3b>(i,j)[1];
-        _R[id] = img.at<cv::Vec3b>(i,j)[2];
-        ++id;
-    }
-
-    unsigned char *C1 = new unsigned char[rows*cols];
-    unsigned char *C2 = new unsigned char[rows*cols];
-    unsigned char *C3 = new unsigned char[rows*cols];
-
-
-/*
- *  Modelos de color:
- *  ----------------
- *    - 0: CMY       - 4: LMS
- *    - 1: HSL       - 5: YIQ
- *    - 2: HSV       - 6: YUV
- *    - 3: XYZ       - 7: YCbCr
- */
-/*abrir_imagen(BMP *imagen, const char *ruta){
-    transformColorModel(R,G,B,C1,C2,C3,rows*cols,2);
-
-    cv::Mat out = cv::Mat(rows,cols,CV_8UC1,C1);
-    cv::normalize(out, out, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-    std::cout << "Channel 1: (" << out.rows << "," << out.cols  << ")"<< std::endl;
-    cv::namedWindow( "Channel 1" );
-    cv::imshow( "Channel 1", out );
-
-    out = cv::Mat(rows,cols,CV_8UC1,C2);
-    cv::normalize(out, out, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-    cv::namedWindow( "Channel 2" );
-    cv::imshow( "Channel 2", out );
-
-    out = cv::Mat(rows,cols,CV_8UC1,C3);
-    cv::normalize(out, out, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-    cv::namedWindow( "Channel 3" );
-    cv::imshow( "Channel 3", out );
-
-    cv::waitKey(0);
-*/
-/*
- *  Filtrado/Convolucion
- *  --------------------
- */
-/*
-    Filter blur(LAPLACE_KERNEL);
-
-    for(int q=0 ; q<5;++q){
-        blur.convolution(R,R,rows,cols,4);
-        blur.convolution(G,G,rows,cols,4);
-        blur.convolution(B,B,rows,cols,4);
-    }
-
-    std::vector<cv::Mat> array_to_merge;
-    array_to_merge.push_back(cv::Mat(rows,cols,CV_8UC1,B));
-    array_to_merge.push_back(cv::Mat(rows,cols,CV_8UC1,G));
-    array_to_merge.push_back(cv::Mat(rows,cols,CV_8UC1,R));
-
-    cv::Mat out;
-    cv::merge(array_to_merge, out);
-
-    cv::namedWindow( "New Image" );
-    cv::imshow( "New Image", out );
-
-    cv::waitKey(0);
-*/
-/*
- *  Execute FFT
- *  -----------
- */
-/*
-    executeFFT(R,G,B,C1, uint(rows), uint(cols));
-
-    cv::Mat out = cv::Mat(rows,cols,CV_8UC1,C1);
-    cv::namedWindow( "FFT" );
-    cv::imshow( "FFT", out );
-*/
-/*
- *  Geometric transformation
- *  ------------------------
- */
-/*
-    geometricTransformation(R , G , B, uint(rows), uint(cols));
- */
-    matching("/home/victor/Documentos/Imagenes/PhotoEditor/gatito.mp4");
-
-    // Delete
-    delete [] _R ; delete [] _G ; delete [] _B ;
-    delete [] C1; delete [] C2; delete [] C3;
-
 }
 
 void PhotoEditor::on_actionCMY_triggered(){
@@ -432,4 +333,8 @@ void PhotoEditor::on_actionPhaseFFT_triggered(){
 
 void PhotoEditor::on_actionPerspective_triggered(){
     geometricTransformation(R,G,B, uint(rows), uint(cols));
+}
+
+void PhotoEditor::on_actionTrackingVideo_triggered(){
+    matching(video);
 }

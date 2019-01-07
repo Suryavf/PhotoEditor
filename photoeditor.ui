@@ -7,33 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>561</width>
-    <height>523</height>
+    <height>520</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>PhotoEditor</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>460</y>
-      <width>89</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Test</string>
-    </property>
-   </widget>
    <widget class="QGraphicsView" name="original">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
       <width>561</width>
-      <height>461</height>
+      <height>481</height>
      </rect>
     </property>
    </widget>
