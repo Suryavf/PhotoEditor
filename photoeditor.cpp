@@ -265,67 +265,105 @@ void PhotoEditor::on_actionYCbCr_triggered(){
 }
 
 void PhotoEditor::on_actionGaussianFilter_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
     Filter blur(GAUSS_KERNEL);
 
     for(int q=0 ; q<5;++q){
-        blur.convolution(R,R,rows,cols,4);
-        blur.convolution(G,G,rows,cols,4);
-        blur.convolution(B,B,rows,cols,4);
+        if(q == 0){
+            blur.convolution(R,C1,rows,cols,4);
+            blur.convolution(G,C2,rows,cols,4);
+            blur.convolution(B,C3,rows,cols,4);
+        }
+        else{
+            blur.convolution(C1,C1,rows,cols,4);
+            blur.convolution(C2,C2,rows,cols,4);
+            blur.convolution(C3,C3,rows,cols,4);
+        }
     }
 
-    showColorImage(R,G,B,rows,cols,"Gaussian Filter");
+    showColorImage(C1,C2,C3,rows,cols,"Gaussian Filter");
 }
 
 void PhotoEditor::on_actionLaplaceFilter_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
     Filter blur(LAPLACE_KERNEL);
 
     for(int q=0 ; q<5;++q){
-        blur.convolution(R,R,rows,cols,4);
-        blur.convolution(G,G,rows,cols,4);
-        blur.convolution(B,B,rows,cols,4);
+        if(q == 0){
+            blur.convolution(R,C1,rows,cols,4);
+            blur.convolution(G,C2,rows,cols,4);
+            blur.convolution(B,C3,rows,cols,4);
+        }
+        else{
+            blur.convolution(C1,C1,rows,cols,4);
+            blur.convolution(C2,C2,rows,cols,4);
+            blur.convolution(C3,C3,rows,cols,4);
+        }
     }
 
-    showColorImage(R,G,B,rows,cols,"Laplacian Filter");
+    showColorImage(C1,C2,C3,rows,cols,"Gaussian Filter");
 }
 
 void PhotoEditor::on_actionGabor0Filter_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
     Filter blur(GABOR_00_KERNEL);
 
-    blur.convolution(R,R,rows,cols,4);
-    blur.convolution(G,G,rows,cols,4);
-    blur.convolution(B,B,rows,cols,4);
+    blur.convolution(R,C1,rows,cols,4);
+    blur.convolution(G,C2,rows,cols,4);
+    blur.convolution(B,C3,rows,cols,4);
 
-    showColorImage(R,G,B,rows,cols,"Gabor 0° Filter");
+    showColorImage(C1,C2,C3,rows,cols,"Gabor 0° Filter");
 }
 
 void PhotoEditor::on_actionGabor45Filter_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
     Filter blur(GABOR_45_KERNEL);
 
-    blur.convolution(R,R,rows,cols,4);
-    blur.convolution(G,G,rows,cols,4);
-    blur.convolution(B,B,rows,cols,4);
+    blur.convolution(R,C1,rows,cols,4);
+    blur.convolution(G,C2,rows,cols,4);
+    blur.convolution(B,C3,rows,cols,4);
 
-    showColorImage(R,G,B,rows,cols,"Gabor 45° Filter");
+    showColorImage(C1,C2,C3,rows,cols,"Gabor 45° Filter");
 }
 
 void PhotoEditor::on_actionGabor90Filter_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
     Filter blur(GABOR_90_KERNEL);
 
-    blur.convolution(R,R,rows,cols,4);
-    blur.convolution(G,G,rows,cols,4);
-    blur.convolution(B,B,rows,cols,4);
+    blur.convolution(R,C1,rows,cols,4);
+    blur.convolution(G,C2,rows,cols,4);
+    blur.convolution(B,C3,rows,cols,4);
 
-    showColorImage(R,G,B,rows,cols,"Gabor 90° Filter");
+    showColorImage(C1,C2,C3,rows,cols,"Gabor 90° Filter");
 }
 
 void PhotoEditor::on_actionGabor135Filter_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    uchar *C2 = new unsigned char[rows*cols];
+    uchar *C3 = new unsigned char[rows*cols];
+
     Filter blur(GABOR_135_KERNEL);
 
-    blur.convolution(R,R,rows,cols,4);
-    blur.convolution(G,G,rows,cols,4);
-    blur.convolution(B,B,rows,cols,4);
+    blur.convolution(R,C1,rows,cols,4);
+    blur.convolution(G,C2,rows,cols,4);
+    blur.convolution(B,C3,rows,cols,4);
 
-    showColorImage(R,G,B,rows,cols,"Gabor 135° Filter");
+    showColorImage(C1,C2,C3,rows,cols,"Gabor 135° Filter");
 }
 
 void PhotoEditor::setDisabledImageSection(const bool &_v){
@@ -359,11 +397,22 @@ void PhotoEditor::setDisabledVideoSection(const bool &_v){
 
 void PhotoEditor::on_actionMagnitudeFFT_triggered(){
     uchar *C1 = new unsigned char[rows*cols];
-    executeFFT(R,G,B,C1, uint(rows), uint(cols));
+    calculateMagnitudeFFT(R,G,B,C1, uint(rows), uint(cols));
 
     cv::Mat out = cv::Mat(rows,cols,CV_8UC1,C1);
-    cv::namedWindow( "FFT" );
-    cv::imshow( "FFT", out );
+    cv::namedWindow( "Magnitude FFT" );
+    cv::imshow( "Magnitude FFT", out );
+
+    delete [] C1;
+}
+
+void PhotoEditor::on_actionPhaseFFT_triggered(){
+    uchar *C1 = new unsigned char[rows*cols];
+    calculatePhaseFFT(R,G,B,C1, uint(rows), uint(cols));
+
+    cv::Mat out = cv::Mat(rows,cols,CV_8UC1,C1);
+    cv::namedWindow( "Phase FFT" );
+    cv::imshow( "Phase FFT", out );
 
     delete [] C1;
 }

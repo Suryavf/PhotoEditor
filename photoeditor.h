@@ -62,6 +62,8 @@ private slots:
     
     void on_actionMagnitudeFFT_triggered();
 
+    void on_actionPhaseFFT_triggered();
+
 private:
     Ui::PhotoEditor         *ui;
     QGraphicsScene       *scene;

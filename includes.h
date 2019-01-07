@@ -25,4 +25,6 @@
 typedef unsigned char uchar;
 typedef unsigned  int uint ;
 
+#define PI 3.14159265
+
 #endif // INCLUDES_H

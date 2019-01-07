@@ -19,8 +19,8 @@ uint idx(uint i, uint j, uint cols){
     return  j + i*cols;
 }
 
-extern "C" void executeFFT(uchar *h_R , uchar *h_G , uchar *h_B ,
-                           uchar *h_Mag, uint rows, uint cols){
+extern "C" void calculateMagnitudeFFT(uchar *h_R , uchar *h_G , uchar *h_B ,
+                                      uchar *h_Mag, uint rows, uint cols){
     uint i,j, id;
     uint length = rows*cols;
 
@@ -31,9 +31,9 @@ extern "C" void executeFFT(uchar *h_R , uchar *h_G , uchar *h_B ,
 	for (i=0;i<rows;i++){
         cImg[i] = new Complex[rows];
         for (j=0;j<cols;j++){ 
-            cImg[i][j].x = (    (double)h_R[id]
-                              + (double)h_G[id]
-                              + (double)h_B[id]  )/3.0;
+            cImg[i][j].x = (    double(h_R[id])
+                              + double(h_G[id])
+                              + double(h_B[id])  )/3.0;
             cImg[i][j].y = 0.0;
             ++id;
         }
@@ -51,7 +51,7 @@ extern "C" void executeFFT(uchar *h_R , uchar *h_G , uchar *h_B ,
 
 	// Create plan
     cufftHandle  planFFT;
-    cufftPlan2d(&planFFT, rows, cols, CUFFT_Z2Z);
+    cufftPlan2d(&planFFT, int(rows), int(cols), CUFFT_Z2Z);
     
     // Execute FFT
     cufftExecZ2Z(planFFT,d_cImg, d_cImg, CUFFT_FORWARD);
@@ -87,7 +87,7 @@ extern "C" void executeFFT(uchar *h_R , uchar *h_G , uchar *h_B ,
     double aux = 255.0/(maxMag-minMag);
 #   pragma omp parallel for num_threads(4)
     for (id=0;id<length;++id){
-        h_Mag[id] = ((uchar)(  (mag[id]-minMag)*aux  ));
+        h_Mag[id] = uchar(  (mag[id]-minMag)*aux  );
     }
 
     // Shift
@@ -111,6 +111,97 @@ extern "C" void executeFFT(uchar *h_R , uchar *h_G , uchar *h_B ,
         free(  cImg);
     cudaFree(d_cImg);
     cufftDestroy(planFFT);
-
 }
 
+extern "C" void calculatePhaseFFT(uchar *h_R  , uchar *h_G, uchar *h_B,
+                                  uchar *h_Phase,
+                                  uint rows, uint cols){
+    uint i,j, id;
+    uint length = rows*cols;
+
+    // RGB to complex
+    id = 0;
+    Complex **cImg=new Complex*[rows];
+#   pragma omp parallel for num_threads(4)
+    for (i=0;i<rows;i++){
+        cImg[i] = new Complex[rows];
+        for (j=0;j<cols;j++){
+            cImg[i][j].x = (    double(h_R[id])
+                              + double(h_G[id])
+                              + double(h_B[id])  )/3.0;
+            cImg[i][j].y = 0.0;
+            ++id;
+        }
+    }
+
+    // Copy to device
+    Complex  *d_cImg;
+    cudaMalloc((void**) &d_cImg, length*sizeof(Complex));
+
+    for(i=0; i<rows; ++i){
+        cudaMemcpy2D(d_cImg + i*cols, sizeof(Complex), cImg[i],
+                                      sizeof(Complex), sizeof(Complex), cols,
+                                      cudaMemcpyHostToDevice);
+    }
+
+    // Create plan
+    cufftHandle  planFFT;
+    cufftPlan2d(&planFFT, int(rows), int(cols), CUFFT_Z2Z);
+
+    // Execute FFT
+    cufftExecZ2Z(planFFT,d_cImg, d_cImg, CUFFT_FORWARD);
+
+    // Copy to host
+    Complex *fft = (Complex*)malloc(rows*cols*sizeof(Complex));
+    cudaMemcpy(fft, d_cImg, sizeof(Complex)*rows*cols , cudaMemcpyDeviceToHost);
+
+    // Calculate magnitude
+    double *phase = (double*)malloc(rows*cols*sizeof(double));
+    double x,y, _phase;
+
+    id = 0;
+#   pragma omp parallel for num_threads(4)
+    for (id=0;id<length;++id){
+        x = fft[id].x;
+        y = fft[id].y;
+
+        if(x>0){
+            _phase = atan( y/x );
+        }else{
+            if(y>0) _phase = atan( y/x ) + PI/2 ;
+            else    _phase = atan( y/x ) - PI/2 ;
+        }
+
+        phase[id] = _phase;
+    }
+
+    // Phase
+    double aux = 255.0/(2*PI);
+#   pragma omp parallel for num_threads(4)
+    for (id=0;id<length;++id){
+        h_Phase[id] = uchar(  (phase[id]+PI)*aux  );
+    }
+
+    // Shift
+    uint cx = rows/2;
+    uint cy = cols/2;
+#   pragma omp parallel for num_threads(4)
+    for (i=0;i<cx;i++){
+        for (j=0;j<cy;j++){
+            swap( h_Phase[ idx(i   ,j   ,cols) ],
+                  h_Phase[ idx(i+cx,j+cy,cols) ] );
+        }
+        for (j=cy;j<cols;j++){
+            swap( h_Phase[ idx(i   ,j   ,cols) ],
+                  h_Phase[ idx(i+cx,j-cy,cols) ] );
+        }
+    }
+
+    // Free memory
+        free(   fft);
+        free( phase);
+        free(  cImg);
+    cudaFree(d_cImg);
+    cufftDestroy(planFFT);
+
+}
