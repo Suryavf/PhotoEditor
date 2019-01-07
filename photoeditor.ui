@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>361</width>
-    <height>324</height>
+    <width>561</width>
+    <height>523</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>260</y>
+      <y>460</y>
       <width>89</width>
       <height>25</height>
      </rect>
@@ -32,8 +32,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>361</width>
-      <height>261</height>
+      <width>561</width>
+      <height>461</height>
      </rect>
     </property>
    </widget>
@@ -43,7 +43,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>361</width>
+     <width>561</width>
      <height>22</height>
     </rect>
    </property>
@@ -91,10 +91,17 @@
     </property>
     <addaction name="actionTrackingVideo"/>
    </widget>
+   <widget class="QMenu" name="menuGeom_Trans">
+    <property name="title">
+     <string>Geom. Trans.</string>
+    </property>
+    <addaction name="actionPerspective"/>
+   </widget>
    <addaction name="menuPhoto_Ed"/>
    <addaction name="menuModel"/>
    <addaction name="menuFilter"/>
    <addaction name="menuFFT"/>
+   <addaction name="menuGeom_Trans"/>
    <addaction name="menuVideo"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -198,6 +205,11 @@
   <action name="actionTrackingVideo">
    <property name="text">
     <string>Tracking</string>
+   </property>
+  </action>
+  <action name="actionPerspective">
+   <property name="text">
+    <string>Perspective</string>
    </property>
   </action>
  </widget>

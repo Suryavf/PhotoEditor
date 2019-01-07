@@ -377,7 +377,7 @@ void PhotoEditor::on_actionGabor135Filter_triggered(){
 }
 
 void PhotoEditor::setDisabledImageSection(const bool &_v){
-    // Model color Disable
+    // Model color Enabled
     ui->actionCMY  ->setEnabled(_v);
     ui->actionHSL  ->setEnabled(_v);
     ui->actionHSV  ->setEnabled(_v);
@@ -387,7 +387,7 @@ void PhotoEditor::setDisabledImageSection(const bool &_v){
     ui->actionYUV  ->setEnabled(_v);
     ui->actionYCbCr->setEnabled(_v);
 
-    // Filter Disable
+    // Filter Enabled
     ui->actionGabor0Filter  ->setEnabled(_v);
     ui->actionGabor45Filter ->setEnabled(_v);
     ui->actionGabor90Filter ->setEnabled(_v);
@@ -395,9 +395,12 @@ void PhotoEditor::setDisabledImageSection(const bool &_v){
     ui->actionGabor135Filter->setEnabled(_v);
     ui->actionGaussianFilter->setEnabled(_v);
 
-    // FFT Disable
+    // FFT Enabled
     ui->actionPhaseFFT    ->setEnabled(_v);
     ui->actionMagnitudeFFT->setEnabled(_v);
+
+    // Geometric Transformation Enabled
+    ui->actionPerspective->setEnabled(_v);
 }
 
 void PhotoEditor::setDisabledVideoSection(const bool &_v){
@@ -425,4 +428,8 @@ void PhotoEditor::on_actionPhaseFFT_triggered(){
     cv::imshow( "Phase FFT", out );
 
     delete [] C1;
+}
+
+void PhotoEditor::on_actionPerspective_triggered(){
+    geometricTransformation(R,G,B, uint(rows), uint(cols));
 }

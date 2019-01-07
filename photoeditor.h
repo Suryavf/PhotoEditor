@@ -64,14 +64,16 @@ private slots:
     void on_actionMagnitudeFFT_triggered();
     void on_actionPhaseFFT_triggered();
 
+    void on_actionPerspective_triggered();
+
 private:
     Ui::PhotoEditor *ui;
 
     BMP   img;
     uchar *R, *G, *B;
+    int   rows, cols;
 
-    int rows;
-    int cols;
+    cv::VideoCapture video;
 
     // Graphics Pixmap
     QGraphicsPixmapItem PixOriginal;
